@@ -73,10 +73,27 @@ Do not implement the final behavior until approved.
 
 ## DEC-005 - Comment Relationships
 
-Status: PENDING
+Status: APPROVED
 
-The final relationship between Comment, User and Receipt
-must be confirmed before implementation.
+Decision:
+A Comment belongs to exactly one User and one Receipt. Both foreign keys use ON DELETE CASCADE. The same user can comment multiple times on the same receipt (no unique constraint on user_id + receipt_id).
+
+---
+
+## DEC-007 - Database Schema and Constraints
+
+Status: APPROVED
+
+Decision:
+1. Users table uses user_id as its primary key (BIGINT UNSIGNED AUTO_INCREMENT).
+2. Suggestions table requires receipt_id referencing receipts.receipt_id (ON DELETE CASCADE) to link it to the original recipe.
+3. Likes_Comments targets comment_id (not receipt_id) and enforces user_id + comment_id composite primary key.
+4. Ingredients table has nullable receipt_id and suggestion_id, with a CHECK constraint enforcing that exactly one of the two is NOT NULL.
+5. Exact column casing from docs/01-database-schema.md is preserved (Calories, Fats, Carbs, Protein, isApproved, isAssigned, timestamp).
+6. Single timestamp field is used in tables instead of Laravel's created_at/updated_at.
+
+Date:
+2026-08-10
 
 ---
 

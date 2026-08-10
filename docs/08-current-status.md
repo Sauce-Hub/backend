@@ -5,7 +5,7 @@ Last Updated:
 
 ## Authentication
 
-- [ ] Sanctum installation
+- [x] Sanctum installation
 - [ ] Register
 - [ ] Login
 - [ ] Logout
@@ -34,16 +34,16 @@ Last Updated:
 - [ ] Create suggestion
 
 ## Database
-
-- [ ] Final migrations
-- [ ] Relationships
-- [ ] Constraints
+ 
+- [x] Final migrations
+- [x] Relationships
+- [x] Constraints
 - [ ] Seeders
 
 ## Testing
 
-- [ ] Feature tests
-- [ ] Authentication tests
+- [x] Feature tests
+- [x] Authentication tests
 - [ ] API validation tests
 
 ## Integration
