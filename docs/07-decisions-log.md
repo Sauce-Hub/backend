@@ -11,7 +11,6 @@ Do not override these decisions without explicit approval.
 Status: APPROVED
 
 Decision:
-
 Use Laravel Sanctum for API authentication.
 
 Date:
@@ -24,11 +23,8 @@ Date:
 Status: APPROVED
 
 Decision:
-
 Every Suggestion belongs to the user who created it.
-
 The user_id must be derived from the authenticated user.
-
 The client must not be trusted to provide ownership.
 
 ---
@@ -38,13 +34,10 @@ The client must not be trusted to provide ownership.
 Status: APPROVED
 
 Decision:
-
 A user can like a specific suggestion.
-
 Likes_Suggestion references:
-
-- user_id
-- suggestion_id
+* user_id
+* suggestion_id
 
 A unique constraint should prevent duplicate likes.
 
@@ -52,22 +45,17 @@ A unique constraint should prevent duplicate likes.
 
 ## DEC-004 - Receipt Details Identifier
 
-Status: PENDING
+Status: APPROVED
 
 Decision:
+The query parameter:
 
-The method for identifying the receipt in:
+`?receipt_id={id}`
 
-GET /api/receipt-details/
+is finalized as the receipt lookup mechanism in `GET /api/receipt-details/` to identify the receipt. This is approved in Postman Contract v4.
 
-must be confirmed with the Flutter/API team.
-
-Candidate:
-
-query parameter:
-?receipt_id={id}
-
-Do not implement the final behavior until approved.
+Date:
+2026-08-10
 
 ---
 
@@ -99,14 +87,13 @@ Date:
 
 ## DEC-006 - AI Contract
 
-Status: PENDING
+Status: PENDING (NEEDS DECISION)
 
-The Laravel ↔ FastAPI request and response schema
-must be confirmed by the AI team.
+Decision:
+The Laravel ↔ FastAPI request and response schema must be confirmed by the AI team. The client-facing contract is finalized (e.g. `POST /api/user-prompt/` etc. in Postman Contract v4), but the backend-to-backend interface details remain open.
 
 ---
 
 # Rule
 
-Every new architecture or business decision must be added here
-before implementation when it affects other developers.
+Every new architecture or business decision must be added here before implementation when it affects other developers.
