@@ -10,14 +10,13 @@ class LoginService
     /**
      * Authenticate a user and generate a Sanctum token.
      *
-     * @param array $data
      * @return array{user: User, token: string}|null
      */
     public function login(array $data): ?array
     {
         $user = User::where('email', $data['email'])->first();
 
-        if (!$user || !Hash::check($data['password'], $user->password)) {
+        if (! $user || ! Hash::check($data['password'], $user->password)) {
             return null;
         }
 

@@ -8,9 +8,6 @@ class LogoutService
 {
     /**
      * Revoke the current authenticated user's access token.
-     *
-     * @param Request $request
-     * @return void
      */
     public function logout(Request $request): void
     {

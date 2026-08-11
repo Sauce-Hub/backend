@@ -2,9 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Models\Receipt;
 use App\Models\Suggestion;
 use App\Models\User;
-use App\Models\Receipt;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**

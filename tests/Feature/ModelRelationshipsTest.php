@@ -1,10 +1,10 @@
 <?php
 
-use App\Models\User;
-use App\Models\Receipt;
-use App\Models\Suggestion;
 use App\Models\Comment;
 use App\Models\Ingredient;
+use App\Models\Receipt;
+use App\Models\Suggestion;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);

@@ -11,7 +11,6 @@ class RegisterService
     /**
      * Register a new user and generate a Sanctum token.
      *
-     * @param array $data
      * @return array{user: User, token: string}
      */
     public function register(array $data): array

@@ -205,9 +205,9 @@ test('registration route is registered with correct url and middleware', functio
     });
 
     $this->assertNotNull($route, 'Route POST /api/register/ was not found.');
-    
+
     $middleware = $route->gatherMiddleware();
-    
+
     $this->assertTrue(
         in_array('throttle:6,1', $middleware) || in_array('throttle:register', $middleware),
         'Throttle middleware not applied to register route.'

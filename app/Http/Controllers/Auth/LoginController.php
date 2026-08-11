@@ -27,7 +27,7 @@ class LoginController extends Controller
     {
         $result = $this->loginService->login($request->validated());
 
-        if (!$result) {
+        if (! $result) {
             return response()->json([
                 'message' => 'Invalid credentials.',
             ], 401);

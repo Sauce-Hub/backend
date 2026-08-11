@@ -133,9 +133,9 @@ test('login route is registered with correct url and middleware', function () {
     });
 
     $this->assertNotNull($route, 'Route POST /api/login/ was not found.');
-    
+
     $middleware = $route->gatherMiddleware();
-    
+
     $this->assertTrue(
         in_array('throttle:6,1', $middleware) || in_array('throttle:login', $middleware),
         'Throttle middleware not applied to login route.'
