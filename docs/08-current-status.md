@@ -32,6 +32,13 @@ Last Updated:
 - [ ] Chat response
 - [ ] Laravel ↔ FastAPI integration
 
+## Comments
+
+- [x] View comments (Implemented GET /api/comments/)
+- [ ] Add comment
+- [ ] Like comment
+- [ ] Remove comment like
+
 ## Suggestions
 
 - [ ] Get suggestions

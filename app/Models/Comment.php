@@ -72,4 +72,12 @@ class Comment extends Model
     {
         return $this->belongsToMany(User::class, 'likes_comments', 'comment_id', 'user_id');
     }
+
+    /**
+     * Get the users who liked the comment (used for eager-loading and likes counts).
+     */
+    public function likes(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'likes_comments', 'comment_id', 'user_id');
+    }
 }
