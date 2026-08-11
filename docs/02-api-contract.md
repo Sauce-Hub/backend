@@ -12,6 +12,26 @@ In the local Postman environment configuration, `baseUrl` is set to the local de
 
 Do not hard-code server addresses.
 
+## Endpoint Checklist (Developer 1 Scope)
+
+Below is the verified checklist of all endpoints assigned for Authentication, Profile, Comments, and Suggestions:
+
+| HTTP Method | Endpoint URL | Authentication | Purpose | Request Parameters / Fields |
+| :--- | :--- | :--- | :--- | :--- |
+| `POST` | `/api/register/` | Public | Register a new user | `name`, `email`, `password` |
+| `POST` | `/api/login/` | Public | Login authentication | `email`, `password` |
+| `DELETE` | `/api/logout/` | Required | Log out a user | — |
+| `GET` | `/api/profile/` | Required | Get user profile details | — |
+| `GET` | `/api/comments/` | Required | View comments on a receipt | Query: `receipt_id`, `page`, `per_page` |
+| `POST` | `/api/comment/` | Required | Add a comment to a receipt | Body: `receipt_id`, `text` |
+| `POST` | `/api/like-comment/` | Required | Like a comment | Body: `comment_id` |
+| `DELETE` | `/api/like-comment/` | Required | Remove like from a comment | Body: `comment_id` |
+| `GET` | `/api/suggestions/` | Required | View suggestions for a receipt | Query: `receipt_id`, `page`, `per_page` |
+| `POST` | `/api/suggestion/` | Required | Add suggestion with ingredients | Body: `receipt_id`, `text`, `ingredients[]` |
+| `POST` | `/api/like-suggestion/` | Required | Like a suggestion | Body: `suggestion_id` |
+| `DELETE` | `/api/like-suggestion/` | Required | Remove like from a suggestion | Body: `suggestion_id` |
+| `PATCH` | `/api/approve-suggestion/` | Required | Approve a suggestion | Body: `suggestion_id` |
+
 ## Authentication
 
 Authentication is handled via **Laravel Sanctum** bearer-token authentication. 
