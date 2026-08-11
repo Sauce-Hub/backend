@@ -13,7 +13,7 @@ Last Updated:
 - [x] Register (Implemented POST /api/register/ with throttling)
 - [x] Login (Implemented POST /api/login/ with throttling)
 - [x] Logout (Implemented DELETE /api/logout/)
-- [ ] Protected routes
+- [x] Protected routes (Registered stubs and verified with tests)
 
 ## Profile
 
