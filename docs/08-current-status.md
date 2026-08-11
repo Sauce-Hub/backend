@@ -17,7 +17,7 @@ Last Updated:
 
 ## Profile
 
-- [ ] Profile endpoint
+- [x] Profile endpoint (Implemented GET /api/profile/)
 
 ## Favorites
 

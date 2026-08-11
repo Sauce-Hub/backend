@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -24,9 +25,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/logout/', [LogoutController::class, 'logout']);
 
     // Profile
-    Route::get('/profile/', function () {
-        return response()->json(['message' => 'Profile stub']);
-    });
+    Route::get('/profile/', [ProfileController::class, 'show']);
 
     // Comments
     Route::get('/comments/', function () {
