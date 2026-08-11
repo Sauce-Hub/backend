@@ -1,7 +1,7 @@
 # Current Backend Status
 
 Last Updated:
-2026-08-10
+2026-08-11
 
 ## API Documentation
 
@@ -10,7 +10,7 @@ Last Updated:
 ## Authentication
 
 - [x] Sanctum installation
-- [ ] Register
+- [x] Register (Implemented POST /api/register/ with throttling)
 - [ ] Login
 - [ ] Logout
 - [ ] Protected routes
@@ -48,7 +48,7 @@ Last Updated:
 
 - [x] Feature tests
 - [x] Authentication tests
-- [ ] API validation tests
+- [x] API validation tests (Register endpoint validation tested)
 
 ## Integration
 

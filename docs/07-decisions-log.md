@@ -92,6 +92,32 @@ Status: PENDING (NEEDS DECISION)
 Decision:
 The Laravel ↔ FastAPI request and response schema must be confirmed by the AI team. The client-facing contract is finalized (e.g. `POST /api/user-prompt/` etc. in Postman Contract v4), but the backend-to-backend interface details remain open.
 
+## DEC-009 - Password Complexity
+
+Status: APPROVED
+
+Decision:
+The user registration endpoint validation requires:
+* Minimum of 8 characters
+* At least one letter
+* At least one number
+Enforced using Laravel's `Password::min(8)->letters()->numbers()` validation rule.
+
+Date:
+2026-08-11
+
+---
+
+## DEC-015 - Registration Throttling
+
+Status: APPROVED
+
+Decision:
+The public user registration endpoint `POST /api/register/` has a rate limiting throttle applied (`throttle:6,1`) to reduce brute-force registration risks.
+
+Date:
+2026-08-11
+
 ---
 
 # Rule
