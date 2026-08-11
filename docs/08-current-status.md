@@ -11,7 +11,7 @@ Last Updated:
 
 - [x] Sanctum installation
 - [x] Register (Implemented POST /api/register/ with throttling)
-- [ ] Login
+- [x] Login (Implemented POST /api/login/ with throttling)
 - [ ] Logout
 - [ ] Protected routes
 
@@ -48,7 +48,7 @@ Last Updated:
 
 - [x] Feature tests
 - [x] Authentication tests
-- [x] API validation tests (Register endpoint validation tested)
+- [x] API validation tests (Register and Login endpoint validation tested)
 
 ## Integration
 

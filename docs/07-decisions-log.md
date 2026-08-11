@@ -118,6 +118,16 @@ The public user registration endpoint `POST /api/register/` has a rate limiting 
 Date:
 2026-08-11
 
+## DEC-016 - Login Throttling
+
+Status: APPROVED
+
+Decision:
+The public user login endpoint `POST /api/login/` has a rate limiting throttle applied (`throttle:6,1`) to reduce brute-force login risks.
+
+Date:
+2026-08-11
+
 ---
 
 # Rule
