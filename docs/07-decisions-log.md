@@ -123,6 +123,18 @@ Date:
 
 ---
 
+## DEC-011 - Duplicate Like Behavior on Comments and Suggestions
+
+Status: APPROVED
+
+Decision:
+If a user attempts to like a comment or suggestion that they have already liked, the operation is treated as idempotent. The API returns a `201 Created` success response with `is_liked: true` and the current count rather than an error or duplicate record.
+
+Date:
+2026-08-11
+
+---
+
 ## DEC-015 - Registration Throttling
 
 Status: APPROVED

@@ -31,9 +31,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // Comments
     Route::get('/comments/', [CommentController::class, 'index']);
     Route::post('/comment/', [CommentController::class, 'store']);
-    Route::post('/like-comment/', function () {
-        return response()->json(['message' => 'Like comment stub']);
-    });
+    Route::post('/like-comment/', [CommentController::class, 'like']);
     Route::delete('/like-comment/', function () {
         return response()->json(['message' => 'Remove comment like stub']);
     });

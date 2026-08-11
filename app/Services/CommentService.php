@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Comment;
 use App\Models\Receipt;
+use App\Models\User;
 
 class CommentService
 {
@@ -75,6 +76,44 @@ class CommentService
         return [
             'success' => true,
             'comment' => $comment,
+        ];
+    }
+
+    /**
+     * Like a comment.
+     *
+     * @param int $userId
+     * @param int $commentId
+     * @return array
+     */
+    public function likeComment(int $userId, int $commentId): array
+    {
+        // 1. Verify comment existence
+        $comment = Comment::find($commentId);
+
+        if (!$comment) {
+            return [
+                'success' => false,
+                'message' => 'Comment not found.',
+            ];
+        }
+
+        $user = User::find($userId);
+
+        // 2. Perform idempotent check: attach only if not already liked
+        $hasLiked = $user->likedComments()->where('comments.id', $commentId)->exists();
+        if (!$hasLiked) {
+            $user->likedComments()->attach($commentId);
+        }
+
+        // 3. Get updated likes count
+        $likesCount = $comment->likedBy()->count();
+
+        return [
+            'success' => true,
+            'comment_id' => $commentId,
+            'is_liked' => true,
+            'likes_count' => $likesCount,
         ];
     }
 }

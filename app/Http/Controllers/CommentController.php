@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Comments\GetCommentsRequest;
+use App\Http\Requests\Comments\LikeCommentRequest;
 use App\Http\Requests\Comments\StoreCommentRequest;
 use App\Http\Resources\CommentResource;
 use App\Http\Resources\CommentStoreResource;
@@ -77,6 +78,33 @@ class CommentController extends Controller
         return response()->json([
             'message' => 'Comment added successfully',
             'comment' => new CommentStoreResource($result['comment']),
+        ], 201);
+    }
+
+    /**
+     * Like a comment.
+     *
+     * @param LikeCommentRequest $request
+     * @return JsonResponse
+     */
+    public function like(LikeCommentRequest $request): JsonResponse
+    {
+        $userId = auth()->id();
+        $commentId = (int) $request->input('comment_id');
+
+        $result = $this->commentService->likeComment($userId, $commentId);
+
+        if (!$result['success']) {
+            return response()->json([
+                'message' => $result['message'],
+            ], 404);
+        }
+
+        return response()->json([
+            'message' => 'Comment liked successfully',
+            'comment_id' => $result['comment_id'],
+            'is_liked' => $result['is_liked'],
+            'likes_count' => $result['likes_count'],
         ], 201);
     }
 }
