@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Comment;
 use App\Models\Receipt;
 
 class CommentService
@@ -40,6 +41,40 @@ class CommentService
                 'total' => $comments->total(),
                 'last_page' => $comments->lastPage(),
             ],
+        ];
+    }
+
+    /**
+     * Store a comment for a receipt.
+     *
+     * @param int $userId
+     * @param int $receiptId
+     * @param string $text
+     * @return array
+     */
+    public function storeComment(int $userId, int $receiptId, string $text): array
+    {
+        // 1. Verify receipt existence
+        $receipt = Receipt::find($receiptId);
+
+        if (!$receipt) {
+            return [
+                'success' => false,
+                'message' => 'Receipt not found.',
+            ];
+        }
+
+        // 2. Create the comment with manually assigned timestamp (since Laravel $timestamps = false)
+        $comment = Comment::create([
+            'user_id' => $userId,
+            'receipt_id' => $receiptId,
+            'text' => $text,
+            'timestamp' => now(),
+        ]);
+
+        return [
+            'success' => true,
+            'comment' => $comment,
         ];
     }
 }

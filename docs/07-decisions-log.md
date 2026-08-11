@@ -108,6 +108,21 @@ Date:
 
 ---
 
+## DEC-010 - Max Text Length for Comments and Suggestions
+
+Status: APPROVED
+
+Decision:
+The maximum character length for comment and suggestion text is constrained to:
+* `Comment`: 1000 characters
+* `Suggestion`: 2000 characters
+Enforced during validation.
+
+Date:
+2026-08-11
+
+---
+
 ## DEC-015 - Registration Throttling
 
 Status: APPROVED

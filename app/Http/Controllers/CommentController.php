@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Comments\GetCommentsRequest;
+use App\Http\Requests\Comments\StoreCommentRequest;
 use App\Http\Resources\CommentResource;
+use App\Http\Resources\CommentStoreResource;
 use App\Services\CommentService;
 use Illuminate\Http\JsonResponse;
 
@@ -50,5 +52,31 @@ class CommentController extends Controller
                 'last_page' => $result['pagination']['last_page'],
             ],
         ], 200);
+    }
+
+    /**
+     * Store a newly created comment in storage.
+     *
+     * @param StoreCommentRequest $request
+     * @return JsonResponse
+     */
+    public function store(StoreCommentRequest $request): JsonResponse
+    {
+        $userId = auth()->id();
+        $receiptId = (int) $request->input('receipt_id');
+        $text = $request->input('text');
+
+        $result = $this->commentService->storeComment($userId, $receiptId, $text);
+
+        if (!$result['success']) {
+            return response()->json([
+                'message' => $result['message'],
+            ], 404);
+        }
+
+        return response()->json([
+            'message' => 'Comment added successfully',
+            'comment' => new CommentStoreResource($result['comment']),
+        ], 201);
     }
 }

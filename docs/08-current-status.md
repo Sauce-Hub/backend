@@ -35,7 +35,7 @@ Last Updated:
 ## Comments
 
 - [x] View comments (Implemented GET /api/comments/)
-- [ ] Add comment
+- [x] Add comment (Implemented POST /api/comment/)
 - [ ] Like comment
 - [ ] Remove comment like
 
