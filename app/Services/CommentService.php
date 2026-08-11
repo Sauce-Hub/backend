@@ -116,4 +116,48 @@ class CommentService
             'likes_count' => $likesCount,
         ];
     }
+
+    /**
+     * Unlike a comment.
+     *
+     * @param int $userId
+     * @param int $commentId
+     * @return array
+     */
+    public function unlikeComment(int $userId, int $commentId): array
+    {
+        // 1. Verify comment existence
+        $comment = Comment::find($commentId);
+
+        if (!$comment) {
+            return [
+                'success' => false,
+                'message' => 'Comment not found.',
+            ];
+        }
+
+        $user = User::find($userId);
+
+        // 2. Verify that the user has actually liked the comment
+        $hasLiked = $user->likedComments()->where('comments.id', $commentId)->exists();
+        if (!$hasLiked) {
+            return [
+                'success' => false,
+                'message' => 'Comment like not found.',
+            ];
+        }
+
+        // 3. Detach the user's like
+        $user->likedComments()->detach($commentId);
+
+        // 4. Get updated likes count
+        $likesCount = $comment->likedBy()->count();
+
+        return [
+            'success' => true,
+            'comment_id' => $commentId,
+            'is_liked' => false,
+            'likes_count' => $likesCount,
+        ];
+    }
 }

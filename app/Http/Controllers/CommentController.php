@@ -107,4 +107,31 @@ class CommentController extends Controller
             'likes_count' => $result['likes_count'],
         ], 201);
     }
+
+    /**
+     * Remove like from a comment.
+     *
+     * @param LikeCommentRequest $request
+     * @return JsonResponse
+     */
+    public function unlike(LikeCommentRequest $request): JsonResponse
+    {
+        $userId = auth()->id();
+        $commentId = (int) $request->input('comment_id');
+
+        $result = $this->commentService->unlikeComment($userId, $commentId);
+
+        if (!$result['success']) {
+            return response()->json([
+                'message' => $result['message'],
+            ], 404);
+        }
+
+        return response()->json([
+            'message' => 'Comment unliked successfully',
+            'comment_id' => $result['comment_id'],
+            'is_liked' => $result['is_liked'],
+            'likes_count' => $result['likes_count'],
+        ], 200);
+    }
 }
