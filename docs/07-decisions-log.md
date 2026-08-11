@@ -128,6 +128,28 @@ The public user login endpoint `POST /api/login/` has a rate limiting throttle a
 Date:
 2026-08-11
 
+## DEC-017 - Logout Token Revocation Scope
+
+Status: APPROVED
+
+Decision:
+The user logout endpoint `DELETE /api/logout/` revokes only the current Sanctum access token used for the request (`$request->user()->currentAccessToken()->delete()`) rather than revoking all active user tokens.
+
+Date:
+2026-08-11
+
+---
+
+## DEC-018 - Logout Response Shape
+
+Status: APPROVED
+
+Decision:
+A successful user logout returns an empty HTTP `204 No Content` response body. No throttling is applied to this endpoint.
+
+Date:
+2026-08-11
+
 ---
 
 # Rule

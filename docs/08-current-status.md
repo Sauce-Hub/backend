@@ -12,7 +12,7 @@ Last Updated:
 - [x] Sanctum installation
 - [x] Register (Implemented POST /api/register/ with throttling)
 - [x] Login (Implemented POST /api/login/ with throttling)
-- [ ] Logout
+- [x] Logout (Implemented DELETE /api/logout/)
 - [ ] Protected routes
 
 ## Profile
