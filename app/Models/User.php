@@ -28,6 +28,13 @@ class User extends Authenticatable
     protected $primaryKey = 'user_id';
 
     /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
+
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>
