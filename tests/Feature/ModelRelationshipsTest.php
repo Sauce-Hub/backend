@@ -113,3 +113,26 @@ test('ingredient belongs to suggestion', function () {
     expect($suggestion->ingredients->first()->id)->toBe($ingredient->id);
     expect($ingredient->suggestion->id)->toBe($suggestion->id);
 });
+
+test('comment likes relationship alias works for eager loading', function () {
+    $user = User::factory()->create();
+    $comment = Comment::factory()->create();
+
+    $user->likedComments()->attach($comment->id);
+
+    $commentWithLikes = Comment::with('likes')->find($comment->id);
+    expect($commentWithLikes->likes)->toHaveCount(1);
+    expect($commentWithLikes->likes->first()->user_id)->toBe($user->user_id);
+});
+
+test('suggestion likes relationship alias works for eager loading', function () {
+    $user = User::factory()->create();
+    $suggestion = Suggestion::factory()->create();
+
+    $user->likedSuggestions()->attach($suggestion->id);
+
+    $suggestionWithLikes = Suggestion::with('likes')->find($suggestion->id);
+    expect($suggestionWithLikes->likes)->toHaveCount(1);
+    expect($suggestionWithLikes->likes->first()->user_id)->toBe($user->user_id);
+});
+
