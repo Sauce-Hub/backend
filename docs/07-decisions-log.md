@@ -203,6 +203,18 @@ Date:
 
 ---
 
+## DEC-013 - Nonexistent Receipt Behavior for Suggestions Listing
+
+Status: APPROVED
+
+Decision:
+When listing suggestions for a receipt (`GET /api/suggestions/`), if the specified `receipt_id` does not exist in the database, the API returns a `404 Not Found` response with `{"message": "Receipt not found."}`. This mirrors the behavior of `GET /api/comments/` for consistency across resource listings.
+
+Date:
+2026-08-12
+
+---
+
 # Rule
 
 Every new architecture or business decision must be added here before implementation when it affects other developers.
