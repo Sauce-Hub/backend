@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Receipt;
 use App\Models\Suggestion;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
 class SuggestionService
@@ -95,5 +96,43 @@ class SuggestionService
                 'suggestion' => $suggestion,
             ];
         });
+    }
+
+    /**
+     * Like a suggestion.
+     *
+     * @param int $userId
+     * @param int $suggestionId
+     * @return array
+     */
+    public function likeSuggestion(int $userId, int $suggestionId): array
+    {
+        // 1. Verify suggestion existence
+        $suggestion = Suggestion::find($suggestionId);
+
+        if (!$suggestion) {
+            return [
+                'success' => false,
+                'message' => 'Suggestion not found.',
+            ];
+        }
+
+        $user = User::find($userId);
+
+        // 2. Perform idempotent check: attach only if not already liked
+        $hasLiked = $user->likedSuggestions()->where('suggestions.id', $suggestionId)->exists();
+        if (!$hasLiked) {
+            $user->likedSuggestions()->attach($suggestionId);
+        }
+
+        // 3. Get updated likes count
+        $likesCount = $suggestion->likes()->count();
+
+        return [
+            'success' => true,
+            'suggestion_id' => $suggestionId,
+            'is_liked' => true,
+            'likes_count' => $likesCount,
+        ];
     }
 }

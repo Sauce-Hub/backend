@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Suggestions\GetSuggestionsRequest;
+use App\Http\Requests\Suggestions\LikeSuggestionRequest;
 use App\Http\Requests\Suggestions\StoreSuggestionRequest;
 use App\Http\Resources\SuggestionResource;
 use App\Http\Resources\SuggestionStoreResource;
@@ -78,6 +79,33 @@ class SuggestionController extends Controller
         return response()->json([
             'message' => 'Suggestion created successfully',
             'suggestion' => new SuggestionStoreResource($result['suggestion']),
+        ], 201);
+    }
+
+    /**
+     * Like a suggestion.
+     *
+     * @param LikeSuggestionRequest $request
+     * @return JsonResponse
+     */
+    public function like(LikeSuggestionRequest $request): JsonResponse
+    {
+        $userId = auth()->id();
+        $suggestionId = (int) $request->input('suggestion_id');
+
+        $result = $this->suggestionService->likeSuggestion($userId, $suggestionId);
+
+        if (!$result['success']) {
+            return response()->json([
+                'message' => $result['message'],
+            ], 404);
+        }
+
+        return response()->json([
+            'message' => 'Suggestion liked successfully',
+            'suggestion_id' => $result['suggestion_id'],
+            'is_liked' => $result['is_liked'],
+            'likes_count' => $result['likes_count'],
         ], 201);
     }
 }

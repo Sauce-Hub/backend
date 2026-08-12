@@ -42,7 +42,8 @@ Last Updated:
 ## Suggestions
 
 - [x] Get suggestions (Implemented GET /api/suggestions/)
-- [ ] Create suggestion
+- [x] Create suggestion (Implemented POST /api/suggestion/)
+- [x] Like suggestion (Implemented POST /api/like-suggestion/)
 
 ## Database
  

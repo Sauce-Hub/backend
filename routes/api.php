@@ -38,9 +38,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // Suggestions
     Route::get('/suggestions/', [SuggestionController::class, 'index']);
     Route::post('/suggestion/', [SuggestionController::class, 'store']);
-    Route::post('/like-suggestion/', function () {
-        return response()->json(['message' => 'Like suggestion stub']);
-    });
+    Route::post('/like-suggestion/', [SuggestionController::class, 'like']);
     Route::delete('/like-suggestion/', function () {
         return response()->json(['message' => 'Remove suggestion like stub']);
     });
