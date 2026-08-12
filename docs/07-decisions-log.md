@@ -179,6 +179,18 @@ Date:
 
 ---
 
+## DEC-012 - Optional Ingredients on Suggestion Creation
+
+Status: APPROVED
+
+Decision:
+The `ingredients` parameter in the request body for creating suggestions (`POST /api/suggestion/`) is optional. If omitted by the client, it defaults to an empty array.
+
+Date:
+2026-08-12
+
+---
+
 # Rule
 
 Every new architecture or business decision must be added here before implementation when it affects other developers.

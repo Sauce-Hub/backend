@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Suggestions\GetSuggestionsRequest;
+use App\Http\Requests\Suggestions\StoreSuggestionRequest;
 use App\Http\Resources\SuggestionResource;
+use App\Http\Resources\SuggestionStoreResource;
 use App\Services\SuggestionService;
 use Illuminate\Http\JsonResponse;
 
@@ -50,5 +52,32 @@ class SuggestionController extends Controller
                 'last_page' => $result['pagination']['last_page'],
             ],
         ], 200);
+    }
+
+    /**
+     * Store a newly created suggestion in storage.
+     *
+     * @param StoreSuggestionRequest $request
+     * @return JsonResponse
+     */
+    public function store(StoreSuggestionRequest $request): JsonResponse
+    {
+        $userId = auth()->id();
+        $receiptId = (int) $request->input('receipt_id');
+        $text = $request->input('text');
+        $ingredients = $request->input('ingredients', []);
+
+        $result = $this->suggestionService->storeSuggestion($userId, $receiptId, $text, $ingredients);
+
+        if (!$result['success']) {
+            return response()->json([
+                'message' => $result['message'],
+            ], 404);
+        }
+
+        return response()->json([
+            'message' => 'Suggestion created successfully',
+            'suggestion' => new SuggestionStoreResource($result['suggestion']),
+        ], 201);
     }
 }
