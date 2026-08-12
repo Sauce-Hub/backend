@@ -135,4 +135,48 @@ class SuggestionService
             'likes_count' => $likesCount,
         ];
     }
+
+    /**
+     * Unlike a suggestion.
+     *
+     * @param int $userId
+     * @param int $suggestionId
+     * @return array
+     */
+    public function unlikeSuggestion(int $userId, int $suggestionId): array
+    {
+        // 1. Verify suggestion existence
+        $suggestion = Suggestion::find($suggestionId);
+
+        if (!$suggestion) {
+            return [
+                'success' => false,
+                'message' => 'Suggestion not found.',
+            ];
+        }
+
+        $user = User::find($userId);
+
+        // 2. Verify that the user has actually liked the suggestion
+        $hasLiked = $user->likedSuggestions()->where('suggestions.id', $suggestionId)->exists();
+        if (!$hasLiked) {
+            return [
+                'success' => false,
+                'message' => 'Suggestion like not found.',
+            ];
+        }
+
+        // 3. Detach the user's like
+        $user->likedSuggestions()->detach($suggestionId);
+
+        // 4. Get updated likes count
+        $likesCount = $suggestion->likes()->count();
+
+        return [
+            'success' => true,
+            'suggestion_id' => $suggestionId,
+            'is_liked' => false,
+            'likes_count' => $likesCount,
+        ];
+    }
 }

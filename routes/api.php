@@ -39,9 +39,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/suggestions/', [SuggestionController::class, 'index']);
     Route::post('/suggestion/', [SuggestionController::class, 'store']);
     Route::post('/like-suggestion/', [SuggestionController::class, 'like']);
-    Route::delete('/like-suggestion/', function () {
-        return response()->json(['message' => 'Remove suggestion like stub']);
-    });
+    Route::delete('/like-suggestion/', [SuggestionController::class, 'unlike']);
     Route::patch('/approve-suggestion/', function () {
         return response()->json(['message' => 'Approve suggestion stub']);
     });

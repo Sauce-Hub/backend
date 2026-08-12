@@ -108,4 +108,31 @@ class SuggestionController extends Controller
             'likes_count' => $result['likes_count'],
         ], 201);
     }
+
+    /**
+     * Remove like from a suggestion.
+     *
+     * @param LikeSuggestionRequest $request
+     * @return JsonResponse
+     */
+    public function unlike(LikeSuggestionRequest $request): JsonResponse
+    {
+        $userId = auth()->id();
+        $suggestionId = (int) $request->input('suggestion_id');
+
+        $result = $this->suggestionService->unlikeSuggestion($userId, $suggestionId);
+
+        if (!$result['success']) {
+            return response()->json([
+                'message' => $result['message'],
+            ], 404);
+        }
+
+        return response()->json([
+            'message' => 'Suggestion unliked successfully',
+            'suggestion_id' => $result['suggestion_id'],
+            'is_liked' => $result['is_liked'],
+            'likes_count' => $result['likes_count'],
+        ], 200);
+    }
 }
