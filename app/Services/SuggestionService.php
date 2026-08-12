@@ -179,4 +179,30 @@ class SuggestionService
             'likes_count' => $likesCount,
         ];
     }
+
+    /**
+     * Approve a suggestion.
+     *
+     * @param int $suggestionId
+     * @return array
+     */
+    public function approveSuggestion(int $suggestionId): array
+    {
+        $suggestion = Suggestion::find($suggestionId);
+
+        if (!$suggestion) {
+            return [
+                'success' => false,
+                'message' => 'Suggestion not found.',
+            ];
+        }
+
+        $suggestion->isApproved = true;
+        $suggestion->save();
+
+        return [
+            'success' => true,
+            'suggestion' => $suggestion,
+        ];
+    }
 }

@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Suggestions\ApproveSuggestionRequest;
 use App\Http\Requests\Suggestions\GetSuggestionsRequest;
 use App\Http\Requests\Suggestions\LikeSuggestionRequest;
 use App\Http\Requests\Suggestions\StoreSuggestionRequest;
+use App\Http\Resources\SuggestionApproveResource;
 use App\Http\Resources\SuggestionResource;
 use App\Http\Resources\SuggestionStoreResource;
+use App\Models\Suggestion;
 use App\Services\SuggestionService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Gate;
 
 class SuggestionController extends Controller
 {
@@ -133,6 +137,38 @@ class SuggestionController extends Controller
             'suggestion_id' => $result['suggestion_id'],
             'is_liked' => $result['is_liked'],
             'likes_count' => $result['likes_count'],
+        ], 200);
+    }
+
+    /**
+     * Approve a suggestion.
+     *
+     * @param ApproveSuggestionRequest $request
+     * @return JsonResponse
+     */
+    public function approve(ApproveSuggestionRequest $request): JsonResponse
+    {
+        $suggestionId = (int) $request->input('suggestion_id');
+        $suggestion = Suggestion::find($suggestionId);
+
+        if (!$suggestion) {
+            return response()->json([
+                'message' => 'Suggestion not found.',
+            ], 404);
+        }
+
+        // Authorize using SuggestionPolicy
+        if (Gate::denies('approve', $suggestion)) {
+            return response()->json([
+                'message' => 'You are not allowed to approve this suggestion.',
+            ], 403);
+        }
+
+        $result = $this->suggestionService->approveSuggestion($suggestionId);
+
+        return response()->json([
+            'message' => 'Suggestion approved successfully',
+            'suggestion' => new SuggestionApproveResource($result['suggestion']),
         ], 200);
     }
 }

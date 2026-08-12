@@ -1,7 +1,7 @@
 # Current Backend Status
 
 Last Updated:
-2026-08-11
+2026-08-12
 
 ## API Documentation
 
@@ -44,6 +44,8 @@ Last Updated:
 - [x] Get suggestions (Implemented GET /api/suggestions/)
 - [x] Create suggestion (Implemented POST /api/suggestion/)
 - [x] Like suggestion (Implemented POST /api/like-suggestion/)
+- [x] Remove suggestion like (Implemented DELETE /api/like-suggestion/)
+- [x] Approve suggestion (Implemented PATCH /api/approve-suggestion/)
 
 ## Database
  

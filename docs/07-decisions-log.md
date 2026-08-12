@@ -191,6 +191,18 @@ Date:
 
 ---
 
+## DEC-008 - Suggestion Approval Authorization
+
+Status: APPROVED
+
+Decision:
+Only the owner of the receipt that a suggestion targets is authorized to approve the suggestion (`PATCH /api/approve-suggestion/`). Any other user's attempt to approve it will be rejected with a `403 Forbidden` status.
+
+Date:
+2026-08-12
+
+---
+
 # Rule
 
 Every new architecture or business decision must be added here before implementation when it affects other developers.
