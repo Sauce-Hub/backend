@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SuggestionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -35,9 +36,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/like-comment/', [CommentController::class, 'unlike']);
 
     // Suggestions
-    Route::get('/suggestions/', function () {
-        return response()->json(['message' => 'Suggestions list stub']);
-    });
+    Route::get('/suggestions/', [SuggestionController::class, 'index']);
     Route::post('/suggestion/', function () {
         return response()->json(['message' => 'Add suggestion stub']);
     });

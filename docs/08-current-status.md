@@ -41,7 +41,7 @@ Last Updated:
 
 ## Suggestions
 
-- [ ] Get suggestions
+- [x] Get suggestions (Implemented GET /api/suggestions/)
 - [ ] Create suggestion
 
 ## Database
