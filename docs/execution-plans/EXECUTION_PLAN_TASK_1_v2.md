@@ -514,17 +514,17 @@ Confirm only intended files changed. Run the full test suite. Only then open the
 
 # Final PR Checklist
 
-- [ ] Branch is based on current integration branch
-- [ ] Auth / Profile / Comments / Suggestions complete
-- [ ] All endpoint URLs and methods re-verified against `docs/02-api-contract.md` (see Task 1.2 table)
-- [ ] Model primary keys and timestamp configuration match DEC-007
-- [ ] Suggestion creation handles `ingredients[]` inside a DB transaction
-- [ ] Open items from Section 0.5 are either confirmed and logged in `07-decisions-log.md`, or explicitly flagged in the PR description
-- [ ] All Form Requests / Services / Policies / API Resources complete
-- [ ] Automated tests pass, including the endpoint-registration regression test
-- [ ] Negative/edge tests pass
-- [ ] Postman tests pass
-- [ ] Authorization and user isolation verified
-- [ ] No secrets committed, no unrelated files changed
-- [ ] Documentation updated, git diff reviewed
-- [ ] PR description explains implementation, testing, and any pending open items
+- [x] Branch is based on current integration branch
+- [x] Auth / Profile / Comments / Suggestions complete
+- [x] All endpoint URLs and methods re-verified against `docs/02-api-contract.md` (see Task 1.2 table)
+- [x] Model primary keys and timestamp configuration match DEC-007
+- [x] Suggestion creation handles `ingredients[]` inside a DB transaction
+- [x] Open items from Section 0.5 are either confirmed and logged in `07-decisions-log.md`, or explicitly flagged in the PR description
+- [x] All Form Requests / Services / Policies / API Resources complete
+- [x] Automated tests pass, including the endpoint-registration regression test
+- [x] Negative/edge tests pass
+- [x] Postman tests pass
+- [x] Authorization and user isolation verified
+- [x] No secrets committed, no unrelated files changed
+- [x] Documentation updated, git diff reviewed
+- [x] PR description explains implementation, testing, and any pending open items
