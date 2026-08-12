@@ -66,7 +66,7 @@ test('view comments returns 404 if receipt does not exist', function () {
 test('authenticated user can view comments with correct payload structure', function () {
     $user = User::factory()->create(['name' => 'Ahmed']);
     $receipt = Receipt::factory()->create();
-    
+
     // Create comments for the receipt
     $comment = Comment::factory()->create([
         'receipt_id' => $receipt->receipt_id,
@@ -128,7 +128,7 @@ test('authenticated user can view comments with correct payload structure', func
 test('view comments respects pagination parameters', function () {
     $user = User::factory()->create();
     $receipt = Receipt::factory()->create();
-    
+
     // Create 5 comments
     Comment::factory()->count(5)->create([
         'receipt_id' => $receipt->receipt_id,
@@ -170,7 +170,7 @@ test('view comments respects pagination parameters', function () {
 test('view comments returns correct likes_count and is_liked true if current user liked it', function () {
     $user = User::factory()->create();
     $receipt = Receipt::factory()->create();
-    
+
     $comment = Comment::factory()->create([
         'receipt_id' => $receipt->receipt_id,
     ]);
@@ -193,7 +193,7 @@ test('view comments returns correct likes_count and is_liked false if current us
     $userA = User::factory()->create();
     $userB = User::factory()->create();
     $receipt = Receipt::factory()->create();
-    
+
     $comment = Comment::factory()->create([
         'receipt_id' => $receipt->receipt_id,
     ]);

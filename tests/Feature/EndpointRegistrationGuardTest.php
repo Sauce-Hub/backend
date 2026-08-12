@@ -48,6 +48,7 @@ test('every task 1.2 endpoint is registered with exact HTTP method and exact URI
 test('every task 1.2 protected endpoint requires Sanctum auth middleware', function (string $method, string $uri, string $url, bool $authRequired) {
     if (! $authRequired) {
         $this->assertFalse($authRequired);
+
         return;
     }
 
@@ -63,7 +64,6 @@ test('every task 1.2 protected endpoint requires Sanctum auth middleware', funct
         sprintf('Endpoint %s /%s/ missing auth:sanctum middleware.', $method, $uri)
     );
 })->with('task_1_2_endpoints');
-
 
 dataset('drifted_or_incorrect_endpoints', [
     'POST /api/comments/ (plural drift on create)' => ['POST', '/api/comments/'],

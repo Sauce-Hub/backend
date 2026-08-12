@@ -144,7 +144,7 @@ test('authenticated user can add comment successfully', function () {
         ->first();
 
     $this->assertNotNull($comment->timestamp);
-    
+
     // Assert response contains correct timestamp formatting
     $responseJson = $response->json();
     $this->assertEquals($comment->timestamp->toIso8601ZuluString(), $responseJson['comment']['timestamp']);

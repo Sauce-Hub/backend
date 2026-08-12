@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 uses(RefreshDatabase::class);
 
-if (!function_exists('clearSanctumAuthState')) {
+if (! function_exists('clearSanctumAuthState')) {
     /**
      * Helper to clear Laravel's in-memory authentication states in tests.
      */

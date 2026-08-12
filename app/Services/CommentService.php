@@ -10,18 +10,13 @@ class CommentService
 {
     /**
      * Get paginated comments for a receipt, with user and likes eager-loaded.
-     *
-     * @param int $receiptId
-     * @param int $page
-     * @param int $perPage
-     * @return array
      */
     public function getCommentsForReceipt(int $receiptId, int $page = 1, int $perPage = 20): array
     {
         // 1. Verify receipt existence
         $receipt = Receipt::find($receiptId);
 
-        if (!$receipt) {
+        if (! $receipt) {
             return [
                 'success' => false,
                 'message' => 'Receipt not found.',
@@ -47,18 +42,13 @@ class CommentService
 
     /**
      * Store a comment for a receipt.
-     *
-     * @param int $userId
-     * @param int $receiptId
-     * @param string $text
-     * @return array
      */
     public function storeComment(int $userId, int $receiptId, string $text): array
     {
         // 1. Verify receipt existence
         $receipt = Receipt::find($receiptId);
 
-        if (!$receipt) {
+        if (! $receipt) {
             return [
                 'success' => false,
                 'message' => 'Receipt not found.',
@@ -81,17 +71,13 @@ class CommentService
 
     /**
      * Like a comment.
-     *
-     * @param int $userId
-     * @param int $commentId
-     * @return array
      */
     public function likeComment(int $userId, int $commentId): array
     {
         // 1. Verify comment existence
         $comment = Comment::find($commentId);
 
-        if (!$comment) {
+        if (! $comment) {
             return [
                 'success' => false,
                 'message' => 'Comment not found.',
@@ -102,7 +88,7 @@ class CommentService
 
         // 2. Perform idempotent check: attach only if not already liked
         $hasLiked = $user->likedComments()->where('comments.id', $commentId)->exists();
-        if (!$hasLiked) {
+        if (! $hasLiked) {
             $user->likedComments()->attach($commentId);
         }
 
@@ -119,17 +105,13 @@ class CommentService
 
     /**
      * Unlike a comment.
-     *
-     * @param int $userId
-     * @param int $commentId
-     * @return array
      */
     public function unlikeComment(int $userId, int $commentId): array
     {
         // 1. Verify comment existence
         $comment = Comment::find($commentId);
 
-        if (!$comment) {
+        if (! $comment) {
             return [
                 'success' => false,
                 'message' => 'Comment not found.',
@@ -140,7 +122,7 @@ class CommentService
 
         // 2. Verify that the user has actually liked the comment
         $hasLiked = $user->likedComments()->where('comments.id', $commentId)->exists();
-        if (!$hasLiked) {
+        if (! $hasLiked) {
             return [
                 'success' => false,
                 'message' => 'Comment like not found.',

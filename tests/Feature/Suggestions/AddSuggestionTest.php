@@ -5,6 +5,7 @@ use App\Models\Receipt;
 use App\Models\Suggestion;
 use App\Models\User;
 use App\Services\SuggestionService;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
@@ -68,8 +69,8 @@ test('add suggestion validates nested ingredients fields', function () {
                 [
                     'quantity' => 2,
                     'unit' => 'cloves',
-                ]
-            ]
+                ],
+            ],
         ]);
     $response->assertStatus(422)->assertJsonValidationErrors(['ingredients.0.name']);
 
@@ -83,8 +84,8 @@ test('add suggestion validates nested ingredients fields', function () {
                     'name' => 'Garlic',
                     'quantity' => 0,
                     'unit' => 'cloves',
-                ]
-            ]
+                ],
+            ],
         ]);
     $response->assertStatus(422)->assertJsonValidationErrors(['ingredients.0.quantity']);
 });
@@ -170,7 +171,7 @@ test('authenticated user can create suggestion with multiple ingredients', funct
                     'unit' => 'tsp',
                     'isAssigned' => true,
                 ],
-            ]
+            ],
         ]);
 
     $response->assertStatus(201)
@@ -262,11 +263,11 @@ test('failed ingredient creation rolls back suggestion creation', function () {
                     'name' => null, // SQLite NOT NULL constraint error triggers here
                     'quantity' => 2,
                     'unit' => 'pcs',
-                ]
+                ],
             ]
         );
         $this->fail('Database constraint exception was not thrown.');
-    } catch (\Illuminate\Database\QueryException $e) {
+    } catch (QueryException $e) {
         // Exception caught successfully
     }
 

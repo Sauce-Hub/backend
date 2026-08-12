@@ -16,8 +16,6 @@ class CommentController extends Controller
 
     /**
      * Create a new controller instance.
-     *
-     * @param CommentService $commentService
      */
     public function __construct(CommentService $commentService)
     {
@@ -26,9 +24,6 @@ class CommentController extends Controller
 
     /**
      * Display a listing of comments for a receipt.
-     *
-     * @param GetCommentsRequest $request
-     * @return JsonResponse
      */
     public function index(GetCommentsRequest $request): JsonResponse
     {
@@ -38,7 +33,7 @@ class CommentController extends Controller
 
         $result = $this->commentService->getCommentsForReceipt($receiptId, $page, $perPage);
 
-        if (!$result['success']) {
+        if (! $result['success']) {
             return response()->json([
                 'message' => $result['message'],
             ], 404);
@@ -57,9 +52,6 @@ class CommentController extends Controller
 
     /**
      * Store a newly created comment in storage.
-     *
-     * @param StoreCommentRequest $request
-     * @return JsonResponse
      */
     public function store(StoreCommentRequest $request): JsonResponse
     {
@@ -69,7 +61,7 @@ class CommentController extends Controller
 
         $result = $this->commentService->storeComment($userId, $receiptId, $text);
 
-        if (!$result['success']) {
+        if (! $result['success']) {
             return response()->json([
                 'message' => $result['message'],
             ], 404);
@@ -83,9 +75,6 @@ class CommentController extends Controller
 
     /**
      * Like a comment.
-     *
-     * @param LikeCommentRequest $request
-     * @return JsonResponse
      */
     public function like(LikeCommentRequest $request): JsonResponse
     {
@@ -94,7 +83,7 @@ class CommentController extends Controller
 
         $result = $this->commentService->likeComment($userId, $commentId);
 
-        if (!$result['success']) {
+        if (! $result['success']) {
             return response()->json([
                 'message' => $result['message'],
             ], 404);
@@ -110,9 +99,6 @@ class CommentController extends Controller
 
     /**
      * Remove like from a comment.
-     *
-     * @param LikeCommentRequest $request
-     * @return JsonResponse
      */
     public function unlike(LikeCommentRequest $request): JsonResponse
     {
@@ -121,7 +107,7 @@ class CommentController extends Controller
 
         $result = $this->commentService->unlikeComment($userId, $commentId);
 
-        if (!$result['success']) {
+        if (! $result['success']) {
             return response()->json([
                 'message' => $result['message'],
             ], 404);

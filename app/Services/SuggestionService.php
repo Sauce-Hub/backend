@@ -11,18 +11,13 @@ class SuggestionService
 {
     /**
      * Get paginated suggestions for a receipt, with user, ingredients, and likes eager-loaded.
-     *
-     * @param int $receiptId
-     * @param int $page
-     * @param int $perPage
-     * @return array
      */
     public function getSuggestionsForReceipt(int $receiptId, int $page = 1, int $perPage = 20): array
     {
         // 1. Verify receipt existence
         $receipt = Receipt::find($receiptId);
 
-        if (!$receipt) {
+        if (! $receipt) {
             return [
                 'success' => false,
                 'message' => 'Receipt not found.',
@@ -48,12 +43,6 @@ class SuggestionService
 
     /**
      * Store a suggestion for a receipt with ingredients.
-     *
-     * @param int $userId
-     * @param int $receiptId
-     * @param string $text
-     * @param array $ingredientsData
-     * @return array
      */
     public function storeSuggestion(int $userId, int $receiptId, string $text, array $ingredientsData = []): array
     {
@@ -61,7 +50,7 @@ class SuggestionService
             // 1. Verify receipt existence
             $receipt = Receipt::find($receiptId);
 
-            if (!$receipt) {
+            if (! $receipt) {
                 return [
                     'success' => false,
                     'message' => 'Receipt not found.',
@@ -100,17 +89,13 @@ class SuggestionService
 
     /**
      * Like a suggestion.
-     *
-     * @param int $userId
-     * @param int $suggestionId
-     * @return array
      */
     public function likeSuggestion(int $userId, int $suggestionId): array
     {
         // 1. Verify suggestion existence
         $suggestion = Suggestion::find($suggestionId);
 
-        if (!$suggestion) {
+        if (! $suggestion) {
             return [
                 'success' => false,
                 'message' => 'Suggestion not found.',
@@ -121,7 +106,7 @@ class SuggestionService
 
         // 2. Perform idempotent check: attach only if not already liked
         $hasLiked = $user->likedSuggestions()->where('suggestions.id', $suggestionId)->exists();
-        if (!$hasLiked) {
+        if (! $hasLiked) {
             $user->likedSuggestions()->attach($suggestionId);
         }
 
@@ -138,17 +123,13 @@ class SuggestionService
 
     /**
      * Unlike a suggestion.
-     *
-     * @param int $userId
-     * @param int $suggestionId
-     * @return array
      */
     public function unlikeSuggestion(int $userId, int $suggestionId): array
     {
         // 1. Verify suggestion existence
         $suggestion = Suggestion::find($suggestionId);
 
-        if (!$suggestion) {
+        if (! $suggestion) {
             return [
                 'success' => false,
                 'message' => 'Suggestion not found.',
@@ -159,7 +140,7 @@ class SuggestionService
 
         // 2. Verify that the user has actually liked the suggestion
         $hasLiked = $user->likedSuggestions()->where('suggestions.id', $suggestionId)->exists();
-        if (!$hasLiked) {
+        if (! $hasLiked) {
             return [
                 'success' => false,
                 'message' => 'Suggestion like not found.',
@@ -182,15 +163,12 @@ class SuggestionService
 
     /**
      * Approve a suggestion.
-     *
-     * @param int $suggestionId
-     * @return array
      */
     public function approveSuggestion(int $suggestionId): array
     {
         $suggestion = Suggestion::find($suggestionId);
 
-        if (!$suggestion) {
+        if (! $suggestion) {
             return [
                 'success' => false,
                 'message' => 'Suggestion not found.',

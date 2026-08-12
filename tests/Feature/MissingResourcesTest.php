@@ -1,7 +1,6 @@
 <?php
 
 use App\Models\Comment;
-use App\Models\Ingredient;
 use App\Models\Receipt;
 use App\Models\Suggestion;
 use App\Models\User;

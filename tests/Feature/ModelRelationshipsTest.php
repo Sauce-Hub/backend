@@ -135,4 +135,3 @@ test('suggestion likes relationship alias works for eager loading', function () 
     expect($suggestionWithLikes->likes)->toHaveCount(1);
     expect($suggestionWithLikes->likes->first()->user_id)->toBe($user->user_id);
 });
-

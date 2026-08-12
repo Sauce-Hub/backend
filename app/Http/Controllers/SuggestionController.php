@@ -20,8 +20,6 @@ class SuggestionController extends Controller
 
     /**
      * Create a new controller instance.
-     *
-     * @param SuggestionService $suggestionService
      */
     public function __construct(SuggestionService $suggestionService)
     {
@@ -30,9 +28,6 @@ class SuggestionController extends Controller
 
     /**
      * Display a listing of suggestions for a receipt.
-     *
-     * @param GetSuggestionsRequest $request
-     * @return JsonResponse
      */
     public function index(GetSuggestionsRequest $request): JsonResponse
     {
@@ -42,7 +37,7 @@ class SuggestionController extends Controller
 
         $result = $this->suggestionService->getSuggestionsForReceipt($receiptId, $page, $perPage);
 
-        if (!$result['success']) {
+        if (! $result['success']) {
             return response()->json([
                 'message' => $result['message'],
             ], 404);
@@ -61,9 +56,6 @@ class SuggestionController extends Controller
 
     /**
      * Store a newly created suggestion in storage.
-     *
-     * @param StoreSuggestionRequest $request
-     * @return JsonResponse
      */
     public function store(StoreSuggestionRequest $request): JsonResponse
     {
@@ -74,7 +66,7 @@ class SuggestionController extends Controller
 
         $result = $this->suggestionService->storeSuggestion($userId, $receiptId, $text, $ingredients);
 
-        if (!$result['success']) {
+        if (! $result['success']) {
             return response()->json([
                 'message' => $result['message'],
             ], 404);
@@ -88,9 +80,6 @@ class SuggestionController extends Controller
 
     /**
      * Like a suggestion.
-     *
-     * @param LikeSuggestionRequest $request
-     * @return JsonResponse
      */
     public function like(LikeSuggestionRequest $request): JsonResponse
     {
@@ -99,7 +88,7 @@ class SuggestionController extends Controller
 
         $result = $this->suggestionService->likeSuggestion($userId, $suggestionId);
 
-        if (!$result['success']) {
+        if (! $result['success']) {
             return response()->json([
                 'message' => $result['message'],
             ], 404);
@@ -115,9 +104,6 @@ class SuggestionController extends Controller
 
     /**
      * Remove like from a suggestion.
-     *
-     * @param LikeSuggestionRequest $request
-     * @return JsonResponse
      */
     public function unlike(LikeSuggestionRequest $request): JsonResponse
     {
@@ -126,7 +112,7 @@ class SuggestionController extends Controller
 
         $result = $this->suggestionService->unlikeSuggestion($userId, $suggestionId);
 
-        if (!$result['success']) {
+        if (! $result['success']) {
             return response()->json([
                 'message' => $result['message'],
             ], 404);
@@ -142,16 +128,13 @@ class SuggestionController extends Controller
 
     /**
      * Approve a suggestion.
-     *
-     * @param ApproveSuggestionRequest $request
-     * @return JsonResponse
      */
     public function approve(ApproveSuggestionRequest $request): JsonResponse
     {
         $suggestionId = (int) $request->input('suggestion_id');
         $suggestion = Suggestion::find($suggestionId);
 
-        if (!$suggestion) {
+        if (! $suggestion) {
             return response()->json([
                 'message' => 'Suggestion not found.',
             ], 404);

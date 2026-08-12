@@ -67,7 +67,7 @@ test('view suggestions returns 404 if receipt does not exist', function () {
 test('authenticated user can view suggestions with correct payload structure', function () {
     $user = User::factory()->create(['name' => 'Sara']);
     $receipt = Receipt::factory()->create();
-    
+
     // Create suggestions for the receipt
     $suggestion = Suggestion::factory()->create([
         'receipt_id' => $receipt->receipt_id,
@@ -161,7 +161,7 @@ test('authenticated user can view suggestions with correct payload structure', f
 test('view suggestions respects pagination parameters', function () {
     $user = User::factory()->create();
     $receipt = Receipt::factory()->create();
-    
+
     // Create 5 suggestions
     Suggestion::factory()->count(5)->create([
         'receipt_id' => $receipt->receipt_id,
@@ -223,7 +223,7 @@ test('authenticated user receives 200 with empty data if receipt has no suggesti
 test('view suggestions returns correct likes_count and is_liked true if current user liked it', function () {
     $user = User::factory()->create();
     $receipt = Receipt::factory()->create();
-    
+
     $suggestion = Suggestion::factory()->create([
         'receipt_id' => $receipt->receipt_id,
     ]);
@@ -245,7 +245,7 @@ test('view suggestions returns correct likes_count and is_liked false if current
     $userA = User::factory()->create();
     $userB = User::factory()->create();
     $receipt = Receipt::factory()->create();
-    
+
     $suggestion = Suggestion::factory()->create([
         'receipt_id' => $receipt->receipt_id,
     ]);

@@ -62,7 +62,7 @@ test('profile response never includes user password hash', function () {
         ->getJson('/api/profile/');
 
     $response->assertStatus(200);
-    
+
     // Explicitly assert password is not returned
     $response->assertJsonMissingPath('password');
     $response->assertJsonMissingPath('remember_token');
@@ -98,4 +98,3 @@ test('profile route is registered with correct url and middleware', function () 
         'Sanctum authentication middleware not applied to profile route.'
     );
 });
-

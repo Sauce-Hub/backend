@@ -17,7 +17,7 @@ class IngredientResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'quantity' => (double) $this->quantity,
+            'quantity' => (float) $this->quantity,
             'unit' => $this->unit,
             'isAssigned' => (bool) $this->isAssigned,
         ];

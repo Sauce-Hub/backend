@@ -9,10 +9,6 @@ class SuggestionPolicy
 {
     /**
      * Determine whether the user can approve the suggestion.
-     *
-     * @param User $user
-     * @param Suggestion $suggestion
-     * @return bool
      */
     public function approve(User $user, Suggestion $suggestion): bool
     {
