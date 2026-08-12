@@ -68,6 +68,22 @@ test('profile response never includes user password hash', function () {
     $response->assertJsonMissingPath('remember_token');
 });
 
+test('profile request returns 401 when user account has been deleted', function () {
+    $user = User::factory()->create();
+    $token = $user->createToken('test-token')->plainTextToken;
+
+    // Delete user from database
+    $user->delete();
+
+    $response = $this->withHeader('Authorization', 'Bearer '.$token)
+        ->getJson('/api/profile/');
+
+    $response->assertStatus(401)
+        ->assertJson([
+            'message' => 'Unauthenticated.',
+        ]);
+});
+
 test('profile route is registered with correct url and middleware', function () {
     $route = collect(Route::getRoutes())->first(function ($route) {
         return $route->uri() === 'api/profile' && in_array('GET', $route->methods());
@@ -82,3 +98,4 @@ test('profile route is registered with correct url and middleware', function () 
         'Sanctum authentication middleware not applied to profile route.'
     );
 });
+
