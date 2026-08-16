@@ -22,6 +22,7 @@ class SuggestionStoreResource extends JsonResource
             'isApproved' => (bool) $this->isApproved,
             'timestamp' => $this->timestamp ? $this->timestamp->toIso8601ZuluString() : null,
             'ingredients' => IngredientResource::collection($this->ingredients),
+            'instructions' => InstructionResource::collection($this->instructions),
         ];
     }
 }

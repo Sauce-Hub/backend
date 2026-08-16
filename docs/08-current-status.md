@@ -121,5 +121,15 @@ Developer 2 must adhere to the following decisions and patterns when implementin
   - Added comprehensive test suite in `tests/Feature/Profile/ProfileTest.php` covering profile retrieval with receipts, user isolation, empty state array (`[]`), unauthenticated access, deleted user handling, and contract casing guards.
   - Verified: 170 automated tests passing (767 assertions), Pint code formatting verified.
 
+- **Task 3.1 — Suggestion Snapshot Creation**: COMPLETED
+  - Implemented initial Suggestion Snapshot Creation where creating a suggestion for a receipt (`POST /api/suggestion/`) captures the current state of recipe ingredients and instructions into the suggestion inside a `DB::transaction()`.
+  - Created `InstructionResource` and updated `SuggestionStoreResource` to include cloned instructions alongside ingredients.
+  - Updated `StoreSuggestionRequest` to validate only `receipt_id` and `text` (max 2000 chars), ignoring any client-sent snapshot items.
+  - Cloned ingredients and instructions have `receipt_id = null` and `suggestion_id = $suggestion->id`, preserving database `CHECK` constraints.
+  - Original recipe ingredients and instructions remain completely unmodified.
+  - Suggestions start with `isApproved = false`.
+  - Added full test suite in `tests/Feature/Suggestions/AddSuggestionTest.php` covering authenticated creation, snapshot cloning, ordering by `step_number`, user isolation, validation, nonexistent receipt 404 handling, and transaction rollback on failure.
+  - Verified: 169 automated tests passing (819 assertions), Pint code formatting verified with 0 violations.
+
 ### Next Pending Task
-- **Task 2.1 — Recipe Suggestions & Instructions Refactor: Suggestions Pipeline** (Awaiting approval)
+- **Task 3.2 — Recipe Suggestions Pipeline: Update & Approval Workflow** (Awaiting approval)

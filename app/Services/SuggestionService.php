@@ -42,13 +42,13 @@ class SuggestionService
     }
 
     /**
-     * Store a suggestion for a receipt with ingredients.
+     * Store a suggestion for a receipt by creating a snapshot of the current recipe ingredients and instructions.
      */
-    public function storeSuggestion(int $userId, int $receiptId, string $text, array $ingredientsData = []): array
+    public function storeSuggestion(int $userId, int $receiptId, string $text): array
     {
-        return DB::transaction(function () use ($userId, $receiptId, $text, $ingredientsData) {
-            // 1. Verify receipt existence
-            $receipt = Receipt::find($receiptId);
+        return DB::transaction(function () use ($userId, $receiptId, $text) {
+            // 1. Verify receipt existence and load current ingredients and instructions
+            $receipt = Receipt::with(['ingredients', 'instructions'])->find($receiptId);
 
             if (! $receipt) {
                 return [
@@ -66,19 +66,28 @@ class SuggestionService
                 'timestamp' => now(),
             ]);
 
-            // 3. Create ingredients (if any)
-            foreach ($ingredientsData as $ingredient) {
+            // 3. Clone current recipe ingredients into the new suggestion
+            foreach ($receipt->ingredients as $ingredient) {
                 $suggestion->ingredients()->create([
-                    'name' => $ingredient['name'],
-                    'quantity' => $ingredient['quantity'],
-                    'unit' => $ingredient['unit'],
-                    'isAssigned' => $ingredient['isAssigned'] ?? false,
+                    'name' => $ingredient->name,
+                    'quantity' => $ingredient->quantity,
+                    'unit' => $ingredient->unit,
+                    'isAssigned' => (bool) $ingredient->isAssigned,
                     'receipt_id' => null, // Enforces PostgreSQL CHECK constraint
                 ]);
             }
 
-            // 4. Load ingredients relationship
-            $suggestion->load('ingredients');
+            // 4. Clone current recipe instructions into the new suggestion
+            foreach ($receipt->instructions as $instruction) {
+                $suggestion->instructions()->create([
+                    'step_number' => $instruction->step_number,
+                    'instruction' => $instruction->instruction,
+                    'receipt_id' => null, // Enforces PostgreSQL CHECK constraint
+                ]);
+            }
+
+            // 5. Load cloned relationships
+            $suggestion->load(['ingredients', 'instructions']);
 
             return [
                 'success' => true,

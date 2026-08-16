@@ -62,9 +62,8 @@ class SuggestionController extends Controller
         $userId = auth()->id();
         $receiptId = (int) $request->input('receipt_id');
         $text = $request->input('text');
-        $ingredients = $request->input('ingredients', []);
 
-        $result = $this->suggestionService->storeSuggestion($userId, $receiptId, $text, $ingredients);
+        $result = $this->suggestionService->storeSuggestion($userId, $receiptId, $text);
 
         if (! $result['success']) {
             return response()->json([

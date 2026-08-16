@@ -27,11 +27,6 @@ class StoreSuggestionRequest extends FormRequest
         return [
             'receipt_id' => ['required', 'integer'],
             'text' => ['required', 'string', 'max:2000'],
-            'ingredients' => ['nullable', 'array'],
-            'ingredients.*.name' => ['required', 'string'],
-            'ingredients.*.quantity' => ['required', 'numeric', 'gt:0'],
-            'ingredients.*.unit' => ['required', 'string'],
-            'ingredients.*.isAssigned' => ['nullable', 'boolean'],
         ];
     }
 
