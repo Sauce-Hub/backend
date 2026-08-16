@@ -84,6 +84,14 @@ class Receipt extends Model
     }
 
     /**
+     * Get the instructions for the receipt ordered by step number.
+     */
+    public function instructions(): HasMany
+    {
+        return $this->hasMany(Instruction::class, 'receipt_id', 'receipt_id')->orderBy('step_number');
+    }
+
+    /**
      * Get the users who favorited the receipt.
      */
     public function favoritedBy(): BelongsToMany

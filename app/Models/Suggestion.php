@@ -77,6 +77,14 @@ class Suggestion extends Model
     }
 
     /**
+     * Get the instructions for the suggestion ordered by step number.
+     */
+    public function instructions(): HasMany
+    {
+        return $this->hasMany(Instruction::class, 'suggestion_id', 'id')->orderBy('step_number');
+    }
+
+    /**
      * Get the users who liked the suggestion.
      */
     public function likedBy(): BelongsToMany

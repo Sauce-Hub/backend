@@ -2,6 +2,7 @@
 
 use App\Models\Comment;
 use App\Models\Ingredient;
+use App\Models\Instruction;
 use App\Models\Receipt;
 use App\Models\Suggestion;
 use App\Models\User;
@@ -134,4 +135,48 @@ test('suggestion likes relationship alias works for eager loading', function () 
     $suggestionWithLikes = Suggestion::with('likes')->find($suggestion->id);
     expect($suggestionWithLikes->likes)->toHaveCount(1);
     expect($suggestionWithLikes->likes->first()->user_id)->toBe($user->user_id);
+});
+
+test('receipt has instructions relationship and orders by step_number', function () {
+    $receipt = Receipt::factory()->create();
+    $step3 = Instruction::factory()->create([
+        'receipt_id' => $receipt->receipt_id,
+        'step_number' => 3,
+        'instruction' => 'Serve hot.',
+    ]);
+    $step1 = Instruction::factory()->create([
+        'receipt_id' => $receipt->receipt_id,
+        'step_number' => 1,
+        'instruction' => 'Chop onions.',
+    ]);
+    $step2 = Instruction::factory()->create([
+        'receipt_id' => $receipt->receipt_id,
+        'step_number' => 2,
+        'instruction' => 'Saute onions.',
+    ]);
+
+    expect($receipt->instructions)->toHaveCount(3);
+    expect($receipt->instructions->pluck('step_number')->all())->toBe([1, 2, 3]);
+    expect($step1->receipt->receipt_id)->toBe($receipt->receipt_id);
+    expect($step2->receipt->receipt_id)->toBe($receipt->receipt_id);
+    expect($step3->receipt->receipt_id)->toBe($receipt->receipt_id);
+});
+
+test('suggestion has instructions relationship and orders by step_number', function () {
+    $suggestion = Suggestion::factory()->create();
+    $step2 = Instruction::factory()->forSuggestion()->create([
+        'suggestion_id' => $suggestion->id,
+        'step_number' => 2,
+        'instruction' => 'Cook on low heat.',
+    ]);
+    $step1 = Instruction::factory()->forSuggestion()->create([
+        'suggestion_id' => $suggestion->id,
+        'step_number' => 1,
+        'instruction' => 'Preheat pan.',
+    ]);
+
+    expect($suggestion->instructions)->toHaveCount(2);
+    expect($suggestion->instructions->pluck('step_number')->all())->toBe([1, 2]);
+    expect($step1->suggestion->id)->toBe($suggestion->id);
+    expect($step2->suggestion->id)->toBe($suggestion->id);
 });

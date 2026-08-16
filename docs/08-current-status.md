@@ -108,6 +108,11 @@ Developer 2 must adhere to the following decisions and patterns when implementin
   - PostgreSQL `CHECK` constraint: `check_instruction_receipt_or_suggestion` enforcing exactly one of `receipt_id` or `suggestion_id` is NOT NULL.
   - Verified: Migration and rollback against live PostgreSQL 16 instance in Docker; 165 automated tests passing on SQLite test environment.
   - Documented in: `docs/01-database-schema.md` and `docs/07-decisions-log.md` (DEC-019, DEC-020, DEC-021).
+- **Task 1.2 — Instruction Model & Eloquent Relationships**: COMPLETED
+  - Model created: `app/Models/Instruction.php` with `$table = 'instructions'`, `$timestamps = false`, `$fillable = ['step_number', 'instruction', 'receipt_id', 'suggestion_id']`, `$casts = ['step_number' => 'integer']`.
+  - Relationships: `Instruction::receipt()`, `Instruction::suggestion()`, `Receipt::instructions()` (ordered by `step_number`), `Suggestion::instructions()` (ordered by `step_number`).
+  - Factory created: `database/factories/InstructionFactory.php`.
+  - Verified: 167 automated tests passing (727 assertions), Pint code formatting verified.
 
 ### Next Pending Task
-- **Task 1.2 — Instruction Model & Eloquent Relationships** (Awaiting approval)
+- **Task 1.3 — Update Profile Endpoint Response Shape** (Awaiting approval)
