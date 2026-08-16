@@ -6,7 +6,6 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SuggestionController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -42,9 +41,4 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/like-suggestion/', [SuggestionController::class, 'like']);
     Route::delete('/like-suggestion/', [SuggestionController::class, 'unlike']);
     Route::patch('/approve-suggestion/', [SuggestionController::class, 'approve']);
-
-    // Temporary Sanctum verification route (Not part of Cooktributors API contract)
-    Route::get('/user', function (Request $request) {
-        return $request->user();
-    });
 });

@@ -261,6 +261,22 @@ Date:
 
 ---
 
+## DEC-022 - Suggestion Re-Approval Idempotency
+
+Status: APPROVED
+
+Decision:
+Re-approving an already approved suggestion (`PATCH /api/approve-suggestion/`) is idempotent.
+- The recipe owner may approve the same suggestion again.
+- The approved suggestion snapshot is reapplied atomically to the target recipe's ingredients and instructions.
+- The endpoint remains successful with HTTP 200.
+- No conflict/409 is generated.
+
+Date:
+2026-08-16
+
+---
+
 # Rule
 
 Every new architecture or business decision must be added here before implementation when it affects other developers.

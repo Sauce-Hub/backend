@@ -36,7 +36,7 @@ test('authenticated user can log out successfully and token is deleted', functio
 
     // Assert token cannot be reused
     $responseUser = $this->withHeader('Authorization', 'Bearer '.$token)
-        ->getJson('/api/user');
+        ->getJson('/api/profile/');
 
     $responseUser->assertStatus(401);
 });
@@ -59,12 +59,12 @@ test('logging out revokes only the current token and preserves other active toke
 
     // Verify token1 is invalid now
     $responseUser1 = $this->withHeader('Authorization', 'Bearer '.$token1)
-        ->getJson('/api/user');
+        ->getJson('/api/profile/');
     $responseUser1->assertStatus(401);
 
     // Verify token2 is still valid
     $responseUser2 = $this->withHeader('Authorization', 'Bearer '.$token2)
-        ->getJson('/api/user');
+        ->getJson('/api/profile/');
     $responseUser2->assertStatus(200);
 });
 
