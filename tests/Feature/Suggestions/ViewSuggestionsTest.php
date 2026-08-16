@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Ingredient;
+use App\Models\Instruction;
 use App\Models\Receipt;
 use App\Models\Suggestion;
 use App\Models\User;
@@ -64,26 +65,49 @@ test('view suggestions returns 404 if receipt does not exist', function () {
         ]);
 });
 
-test('authenticated user can view suggestions with correct payload structure', function () {
+test('authenticated user can view suggestions with ingredients and instructions ordered by step_number ASC', function () {
     $user = User::factory()->create(['name' => 'Sara']);
     $receipt = Receipt::factory()->create();
 
-    // Create suggestions for the receipt
+    // Create suggestion for the receipt
     $suggestion = Suggestion::factory()->create([
         'receipt_id' => $receipt->receipt_id,
         'user_id' => $user->user_id,
-        'text' => 'Add garlic',
+        'text' => 'Add garlic and basil',
         'isApproved' => false,
         'timestamp' => now()->startOfSecond(),
     ]);
 
-    // Create an ingredient associated with the suggestion
-    $ingredient = Ingredient::factory()->forSuggestion()->create([
+    // Create ingredients for the suggestion
+    $ingredient1 = Ingredient::factory()->forSuggestion()->create([
         'suggestion_id' => $suggestion->id,
+        'receipt_id' => null,
         'name' => 'Garlic',
         'quantity' => 2.0,
         'unit' => 'cloves',
         'isAssigned' => false,
+    ]);
+    $ingredient2 = Ingredient::factory()->forSuggestion()->create([
+        'suggestion_id' => $suggestion->id,
+        'receipt_id' => null,
+        'name' => 'Fresh Basil',
+        'quantity' => 5.0,
+        'unit' => 'leaves',
+        'isAssigned' => true,
+    ]);
+
+    // Create instructions out of order to verify step_number ASC ordering
+    $instructionStep2 = Instruction::factory()->forSuggestion()->create([
+        'suggestion_id' => $suggestion->id,
+        'receipt_id' => null,
+        'step_number' => 2,
+        'instruction' => 'Tear fresh basil leaves on top.',
+    ]);
+    $instructionStep1 = Instruction::factory()->forSuggestion()->create([
+        'suggestion_id' => $suggestion->id,
+        'receipt_id' => null,
+        'step_number' => 1,
+        'instruction' => 'Sauté garlic in olive oil.',
     ]);
 
     $token = $user->createToken('test-token')->plainTextToken;
@@ -115,6 +139,13 @@ test('authenticated user can view suggestions with correct payload structure', f
                             'isAssigned',
                         ],
                     ],
+                    'instructions' => [
+                        '*' => [
+                            'id',
+                            'step_number',
+                            'instruction',
+                        ],
+                    ],
                 ],
             ],
             'meta' => [
@@ -129,7 +160,7 @@ test('authenticated user can view suggestions with correct payload structure', f
                 [
                     'id' => $suggestion->id,
                     'receipt_id' => $receipt->receipt_id,
-                    'text' => 'Add garlic',
+                    'text' => 'Add garlic and basil',
                     'isApproved' => false,
                     'timestamp' => $suggestion->timestamp->toIso8601ZuluString(),
                     'user' => [
@@ -140,11 +171,30 @@ test('authenticated user can view suggestions with correct payload structure', f
                     'is_liked' => false,
                     'ingredients' => [
                         [
-                            'id' => $ingredient->id,
+                            'id' => $ingredient1->id,
                             'name' => 'Garlic',
                             'quantity' => 2.0,
                             'unit' => 'cloves',
                             'isAssigned' => false,
+                        ],
+                        [
+                            'id' => $ingredient2->id,
+                            'name' => 'Fresh Basil',
+                            'quantity' => 5.0,
+                            'unit' => 'leaves',
+                            'isAssigned' => true,
+                        ],
+                    ],
+                    'instructions' => [
+                        [
+                            'id' => $instructionStep1->id,
+                            'step_number' => 1,
+                            'instruction' => 'Sauté garlic in olive oil.',
+                        ],
+                        [
+                            'id' => $instructionStep2->id,
+                            'step_number' => 2,
+                            'instruction' => 'Tear fresh basil leaves on top.',
                         ],
                     ],
                 ],
@@ -156,6 +206,57 @@ test('authenticated user can view suggestions with correct payload structure', f
                 'last_page' => 1,
             ],
         ]);
+});
+
+test('view suggestions returns empty ingredients and instructions arrays when suggestion has none', function () {
+    $user = User::factory()->create();
+    $receipt = Receipt::factory()->create();
+
+    $suggestion = Suggestion::factory()->create([
+        'receipt_id' => $receipt->receipt_id,
+        'user_id' => $user->user_id,
+        'text' => 'Idea without items',
+    ]);
+
+    $token = $user->createToken('test-token')->plainTextToken;
+
+    $response = $this->withHeader('Authorization', 'Bearer '.$token)
+        ->getJson("/api/suggestions/?receipt_id={$receipt->receipt_id}");
+
+    $response->assertStatus(200)
+        ->assertJsonPath('data.0.ingredients', [])
+        ->assertJsonPath('data.0.instructions', []);
+});
+
+test('view suggestions only returns suggestions belonging to the requested receipt', function () {
+    $user = User::factory()->create();
+    $receiptA = Receipt::factory()->create();
+    $receiptB = Receipt::factory()->create();
+
+    $suggestionA = Suggestion::factory()->create(['receipt_id' => $receiptA->receipt_id, 'text' => 'Suggestion for Receipt A']);
+    $suggestionB = Suggestion::factory()->create(['receipt_id' => $receiptB->receipt_id, 'text' => 'Suggestion for Receipt B']);
+
+    $token = $user->createToken('test-token')->plainTextToken;
+
+    $responseA = $this->withHeader('Authorization', 'Bearer '.$token)
+        ->getJson("/api/suggestions/?receipt_id={$receiptA->receipt_id}");
+
+    $responseA->assertStatus(200);
+    $dataA = $responseA->json('data');
+    expect($dataA)->toHaveCount(1);
+    expect($dataA[0]['id'])->toBe($suggestionA->id);
+    expect($dataA[0]['receipt_id'])->toBe($receiptA->receipt_id);
+    expect($dataA[0]['text'])->toBe('Suggestion for Receipt A');
+
+    $responseB = $this->withHeader('Authorization', 'Bearer '.$token)
+        ->getJson("/api/suggestions/?receipt_id={$receiptB->receipt_id}");
+
+    $responseB->assertStatus(200);
+    $dataB = $responseB->json('data');
+    expect($dataB)->toHaveCount(1);
+    expect($dataB[0]['id'])->toBe($suggestionB->id);
+    expect($dataB[0]['receipt_id'])->toBe($receiptB->receipt_id);
+    expect($dataB[0]['text'])->toBe('Suggestion for Receipt B');
 });
 
 test('view suggestions respects pagination parameters', function () {

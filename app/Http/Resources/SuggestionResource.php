@@ -42,6 +42,7 @@ class SuggestionResource extends JsonResource
             'likes_count' => $likesCount,
             'is_liked' => (bool) $isLiked,
             'ingredients' => IngredientResource::collection($this->ingredients),
+            'instructions' => InstructionResource::collection($this->instructions),
         ];
     }
 }

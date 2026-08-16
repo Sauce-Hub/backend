@@ -26,7 +26,7 @@ class SuggestionService
 
         // 2. Fetch paginated suggestions for this receipt with relationships eager-loaded
         $suggestions = $receipt->suggestions()
-            ->with(['user', 'ingredients', 'likes'])
+            ->with(['user', 'ingredients', 'instructions', 'likes'])
             ->paginate($perPage, ['*'], 'page', $page);
 
         return [

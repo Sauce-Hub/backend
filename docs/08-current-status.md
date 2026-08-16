@@ -131,5 +131,11 @@ Developer 2 must adhere to the following decisions and patterns when implementin
   - Added full test suite in `tests/Feature/Suggestions/AddSuggestionTest.php` covering authenticated creation, snapshot cloning, ordering by `step_number`, user isolation, validation, nonexistent receipt 404 handling, and transaction rollback on failure.
   - Verified: 169 automated tests passing (819 assertions), Pint code formatting verified with 0 violations.
 
+- **Task 3.2 — Suggestion Retrieval with Instructions**: COMPLETED
+  - Enhanced `GET /api/suggestions/` to include `instructions` snapshot array ordered by `step_number ASC` alongside `ingredients` in `SuggestionResource`.
+  - Updated `SuggestionService::getSuggestionsForReceipt()` to eager-load `instructions` relationship (`with(['user', 'ingredients', 'instructions', 'likes'])`).
+  - Added comprehensive test suite in `tests/Feature/Suggestions/ViewSuggestionsTest.php` verifying instructions and ingredients retrieval, `step_number` ordering, empty array responses, user isolation, pagination, likes metadata, and contract casing.
+  - Verified: 169 automated tests passing (825 assertions), Pint code formatting verified with 0 violations.
+
 ### Next Pending Task
-- **Task 3.2 — Recipe Suggestions Pipeline: Update & Approval Workflow** (Awaiting approval)
+- **Task 3.3 — Recipe Suggestions Pipeline: Update & Approval Workflow** (Awaiting approval)

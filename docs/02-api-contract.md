@@ -817,7 +817,8 @@ Required
             },
             "likes_count": 2,
             "is_liked": false,
-            "ingredients": []
+            "ingredients": [],
+            "instructions": []
         }
     ],
     "meta": {
