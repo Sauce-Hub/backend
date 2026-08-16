@@ -12,6 +12,13 @@ class ProfileService
      */
     public function getProfile(): ?User
     {
-        return Auth::user();
+        /** @var User|null $user */
+        $user = Auth::user();
+
+        if ($user) {
+            $user->load('receipts');
+        }
+
+        return $user;
     }
 }

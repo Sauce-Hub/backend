@@ -1324,7 +1324,21 @@ Required
 {
     "user_id": 1,
     "name": "Ahmed",
-    "email": "ahmed@example.com"
+    "email": "ahmed@example.com",
+    "receipts": [
+        {
+            "receipt_id": 1,
+            "name": "Pasta",
+            "caption": "Quick pasta",
+            "category": "Dinner",
+            "estimated_time": "20 min",
+            "Calories": 500,
+            "Fats": 15,
+            "Carbs": 70,
+            "Protein": 20,
+            "timestamp": "2026-08-10T18:00:00Z"
+        }
+    ]
 }
 ```
 

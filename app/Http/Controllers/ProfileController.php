@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\UserResource;
+use App\Http\Resources\ProfileResource;
 use App\Services\ProfileService;
 use Illuminate\Http\JsonResponse;
 
@@ -31,6 +31,6 @@ class ProfileController extends Controller
             ], 401);
         }
 
-        return response()->json((new UserResource($user))->resolve());
+        return response()->json((new ProfileResource($user))->resolve());
     }
 }

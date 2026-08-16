@@ -12,7 +12,7 @@ Last Updated: 2026-08-12
    - `DELETE /api/logout/` (Protected) — Token revocation. Revokes current access token only (DEC-017). Returns `204 No Content` (DEC-018).
 
 2. **Profile**
-   - `GET /api/profile/` (Protected) — Authenticated profile. Returns flat JSON payload `{"user_id", "name", "email"}`.
+   - `GET /api/profile/` (Protected) — Authenticated profile. Returns flat JSON payload `{"user_id", "name", "email", "receipts": [...]}` containing the authenticated user's profile and recipe list (empty array `[]` when no recipes exist).
 
 3. **Comments**
    - `GET /api/comments/` (Protected) — Listing comments for a receipt. Query params: `receipt_id`, `page`, `per_page`. Eager loads `user` and `likes`. Returns `404 Receipt not found.` if receipt does not exist. Returns `200 OK` with paginated `data` array and `meta` object.
@@ -114,5 +114,12 @@ Developer 2 must adhere to the following decisions and patterns when implementin
   - Factory created: `database/factories/InstructionFactory.php`.
   - Verified: 167 automated tests passing (727 assertions), Pint code formatting verified.
 
+- **Task 1.3 — Update Profile Endpoint Response Shape**: COMPLETED
+  - Implemented `ProfileResource` and `ReceiptResource` formatting profile data and user's receipts matching the exact approved contract casing and structure (`receipt_id`, `name`, `caption`, `category`, `estimated_time`, `Calories`, `Fats`, `Carbs`, `Protein`, `timestamp`).
+  - Updated `ProfileService::getProfile()` to eager-load `receipts`.
+  - Updated `ProfileController::show()` to return `ProfileResource`.
+  - Added comprehensive test suite in `tests/Feature/Profile/ProfileTest.php` covering profile retrieval with receipts, user isolation, empty state array (`[]`), unauthenticated access, deleted user handling, and contract casing guards.
+  - Verified: 170 automated tests passing (767 assertions), Pint code formatting verified.
+
 ### Next Pending Task
-- **Task 1.3 — Update Profile Endpoint Response Shape** (Awaiting approval)
+- **Task 2.1 — Recipe Suggestions & Instructions Refactor: Suggestions Pipeline** (Awaiting approval)
