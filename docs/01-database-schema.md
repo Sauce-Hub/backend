@@ -66,9 +66,27 @@ Relationships:
 
 - belongs to User
 - has many Ingredients (ON DELETE CASCADE)
+- has many Instructions (ON DELETE CASCADE)
 - has many Favorites (ON DELETE CASCADE)
 - has many Comments (ON DELETE CASCADE)
 - has many Suggestions (ON DELETE CASCADE)
+
+---
+
+# Instruction
+
+Fields:
+
+- id (BIGINT UNSIGNED, PK, AUTO_INCREMENT)
+- step_number (INT)
+- instruction (TEXT)
+- receipt_id (BIGINT UNSIGNED, Nullable, FK → receipts.receipt_id, ON DELETE CASCADE)
+- suggestion_id (BIGINT UNSIGNED, Nullable, FK → suggestions.id, ON DELETE CASCADE)
+
+Constraints:
+
+- CHECK constraint enforcing exactly one of `receipt_id` and `suggestion_id` is NOT NULL:
+  `(receipt_id IS NULL AND suggestion_id IS NOT NULL) OR (receipt_id IS NOT NULL AND suggestion_id IS NULL)`
 
 ---
 
@@ -165,6 +183,8 @@ Relationships:
 
 - belongs to User
 - belongs to Receipt
+- has many Ingredients (ON DELETE CASCADE)
+- has many Instructions (ON DELETE CASCADE)
 - has many Likes_Suggestion (ON DELETE CASCADE)
 
 ---

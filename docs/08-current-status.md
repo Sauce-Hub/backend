@@ -99,10 +99,15 @@ Developer 2 must adhere to the following decisions and patterns when implementin
 
 ---
 
-## Known Limitations & Out-of-Scope Items for Dev 1
+## Current Sprint Progress (Recipe Suggestions & Instructions Refactor)
 
-The following areas are intentionally reserved for Developer 2 and remain un-implemented:
-- **Receipts Endpoints:** `POST /api/new-post/`, `GET /api/fyp/`, `GET /api/receipt-details/`, `POST /api/like/`, `DELETE /api/like/`
-- **Favorites Endpoints:** `GET /api/favorites/`, `POST /api/favorites/`, `DELETE /api/remove-favorites/`
-- **Chatbot / AI Endpoints:** `GET /api/chat-history/`, `POST /api/user-prompt/`, `GET /api/chat-response/`
-- **Seeders:** Database seeders have not been populated.
+### Completed Tasks
+- **Task 1.1 — Create `instructions` database migration**: COMPLETED
+  - Migration file created: `database/migrations/2026_08_16_000000_create_instructions_table.php`
+  - Fields: `id`, `step_number` (int), `instruction` (text), `receipt_id` (nullable FK → `receipts.receipt_id`, CASCADE), `suggestion_id` (nullable FK → `suggestions.id`, CASCADE).
+  - PostgreSQL `CHECK` constraint: `check_instruction_receipt_or_suggestion` enforcing exactly one of `receipt_id` or `suggestion_id` is NOT NULL.
+  - Verified: Migration and rollback against live PostgreSQL 16 instance in Docker; 165 automated tests passing on SQLite test environment.
+  - Documented in: `docs/01-database-schema.md` and `docs/07-decisions-log.md` (DEC-019, DEC-020, DEC-021).
+
+### Next Pending Task
+- **Task 1.2 — Instruction Model & Eloquent Relationships** (Awaiting approval)

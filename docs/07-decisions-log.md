@@ -215,6 +215,52 @@ Date:
 
 ---
 
+## DEC-019 - Instructions Table & Conditional Foreign Key Constraint
+
+Status: APPROVED
+
+Decision:
+The `instructions` table stores step-by-step cooking instructions for receipts and suggestions.
+Fields:
+- `id` (BIGINT UNSIGNED, PK, AUTO_INCREMENT)
+- `step_number` (INT)
+- `instruction` (TEXT)
+- `receipt_id` (BIGINT UNSIGNED, Nullable, FK → receipts.receipt_id, ON DELETE CASCADE)
+- `suggestion_id` (BIGINT UNSIGNED, Nullable, FK → suggestions.id, ON DELETE CASCADE)
+
+A CHECK constraint enforces that exactly one of `receipt_id` and `suggestion_id` is NOT NULL:
+`((receipt_id IS NULL AND suggestion_id IS NOT NULL) OR (receipt_id IS NOT NULL AND suggestion_id IS NULL))`
+
+Date:
+2026-08-16
+
+---
+
+## DEC-020 - Stale Suggestions Overwrite Policy
+
+Status: APPROVED
+
+Decision:
+Option 1 (Owner Discretion / Unconditional Overwrite) is adopted.
+When a recipe owner approves a pending suggestion, the snapshot of ingredients and instructions contained in that suggestion unconditionally replaces the recipe's current ingredients and instructions, regardless of whether the recipe was modified after the suggestion was created.
+
+Date:
+2026-08-16
+
+---
+
+## DEC-021 - Profile Response Key
+
+Status: APPROVED
+
+Decision:
+The key returned in `GET /api/profile/` containing the user's recipes is finalized as `"receipts"`.
+
+Date:
+2026-08-16
+
+---
+
 # Rule
 
 Every new architecture or business decision must be added here before implementation when it affects other developers.
