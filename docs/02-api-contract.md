@@ -27,7 +27,7 @@ Below is the verified checklist of all endpoints assigned for Authentication, Pr
 | `POST` | `/api/like-comment/` | Required | Like a comment | Body: `comment_id` |
 | `DELETE` | `/api/like-comment/` | Required | Remove like from a comment | Body: `comment_id` |
 | `GET` | `/api/suggestions/` | Required | View suggestions for a receipt | Query: `receipt_id`, `page`, `per_page` |
-| `POST` | `/api/suggestion/` | Required | Add suggestion with ingredients | Body: `receipt_id`, `text`, `ingredients[]` |
+| `POST` | `/api/suggestion/` | Required | Add suggestion with snapshot | Body: `receipt_id`, `text` |
 | `POST` | `/api/like-suggestion/` | Required | Like a suggestion | Body: `suggestion_id` |
 | `DELETE` | `/api/like-suggestion/` | Required | Remove like from a suggestion | Body: `suggestion_id` |
 | `PATCH` | `/api/approve-suggestion/` | Required | Approve a suggestion | Body: `suggestion_id` |
@@ -854,19 +854,17 @@ Required
 * `Accept: application/json`
 * `Content-Type: application/json`
 
+### Notes
+* The client does **not** send `ingredients[]` or `instructions[]`.
+* The backend creates an automatic snapshot from the target recipe's **current** ingredients and instructions inside a database transaction.
+* Cloned snapshot ingredients and instructions belong to the newly created suggestion (`suggestion_id` is set, `receipt_id` is `null`).
+* The original recipe's ingredients and instructions remain unmodified.
+
 ### Request Body (raw JSON)
 ```json
 {
   "receipt_id": 1,
-  "text": "Add garlic",
-  "ingredients": [
-    {
-      "name": "Garlic",
-      "quantity": 2,
-      "unit": "cloves",
-      "isAssigned": false
-    }
-  ]
+  "text": "Add garlic"
 }
 ```
 
@@ -889,6 +887,13 @@ Required
                 "quantity": 2,
                 "unit": "cloves",
                 "isAssigned": false
+            }
+        ],
+        "instructions": [
+            {
+                "id": 1,
+                "step_number": 1,
+                "instruction": "Boil pasta in salted water."
             }
         ]
     }
