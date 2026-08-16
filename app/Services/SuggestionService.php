@@ -171,26 +171,60 @@ class SuggestionService
     }
 
     /**
-     * Approve a suggestion.
+     * Approve a suggestion and atomically replace the target recipe's ingredients and instructions with the suggestion snapshot.
      */
     public function approveSuggestion(int $suggestionId): array
     {
-        $suggestion = Suggestion::find($suggestionId);
+        return DB::transaction(function () use ($suggestionId) {
+            $suggestion = Suggestion::with(['receipt', 'ingredients', 'instructions'])->find($suggestionId);
 
-        if (! $suggestion) {
+            if (! $suggestion) {
+                return [
+                    'success' => false,
+                    'message' => 'Suggestion not found.',
+                ];
+            }
+
+            $receipt = $suggestion->receipt;
+
+            if (! $receipt) {
+                return [
+                    'success' => false,
+                    'message' => 'Receipt not found.',
+                ];
+            }
+
+            // 1. Replace current recipe ingredients with suggestion ingredients snapshot
+            $receipt->ingredients()->delete();
+            foreach ($suggestion->ingredients as $ingredient) {
+                $receipt->ingredients()->create([
+                    'name' => $ingredient->name,
+                    'quantity' => $ingredient->quantity,
+                    'unit' => $ingredient->unit,
+                    'isAssigned' => (bool) $ingredient->isAssigned,
+                    'suggestion_id' => null, // Enforces CHECK constraint
+                ]);
+            }
+
+            // 2. Replace current recipe instructions with suggestion instructions snapshot
+            $receipt->instructions()->delete();
+            foreach ($suggestion->instructions as $instruction) {
+                $receipt->instructions()->create([
+                    'step_number' => $instruction->step_number,
+                    'instruction' => $instruction->instruction,
+                    'suggestion_id' => null, // Enforces CHECK constraint
+                ]);
+            }
+
+            // 3. Mark suggestion as approved
+            $suggestion->isApproved = true;
+            $suggestion->save();
+
             return [
-                'success' => false,
-                'message' => 'Suggestion not found.',
+                'success' => true,
+                'suggestion' => $suggestion,
             ];
-        }
-
-        $suggestion->isApproved = true;
-        $suggestion->save();
-
-        return [
-            'success' => true,
-            'suggestion' => $suggestion,
-        ];
+        });
     }
 
     /**

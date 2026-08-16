@@ -147,5 +147,15 @@ Developer 2 must adhere to the following decisions and patterns when implementin
   - Synchronized `docs/02-api-contract.md` with full endpoint documentation.
   - Verified: 180 automated tests passing (923 assertions), Pint code formatting verified with 0 violations.
 
+- **Task 5.1 — Suggestion Approval & Atomic Recipe Replacement**: COMPLETED
+  - Implemented atomic recipe replacement on `PATCH /api/approve-suggestion/` inside `SuggestionService::approveSuggestion()` within a single `DB::transaction()`.
+  - When the recipe owner approves a suggestion, the target recipe's current ingredients and instructions are deleted and fully replaced by copies of the suggestion snapshot items (`receipt_id = target_id`, `suggestion_id = null`).
+  - Suggestion's own ingredients and instructions snapshot remain preserved for audit/history (`suggestion_id = id`, `receipt_id = null`).
+  - Marked suggestion as `isApproved = true`.
+  - Follows DEC-020 (Option 1 — unconditional overwrite).
+  - Preserved authorization via `SuggestionPolicy::approve()` (`403 Forbidden` for non-recipe owners) and contract response shape via `SuggestionApproveResource`.
+  - Added comprehensive test suite in `tests/Feature/Suggestions/ApproveSuggestionTest.php` covering ownership authorization, recipe replacement, snapshot preservation, step number ordering, empty snapshot handling, and atomic rollback on failure.
+  - Verified: 184 automated tests passing (962 assertions), Pint code formatting verified with 0 violations.
+
 ### Next Pending Task
-- **Task 4.2 — Recipe Suggestions Pipeline: Suggestion Approval & Recipe Overwrite Workflow** (Awaiting approval)
+- **Sprint / Milestone Review** (Awaiting further instruction)
