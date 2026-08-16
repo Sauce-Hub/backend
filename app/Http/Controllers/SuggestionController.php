@@ -6,6 +6,7 @@ use App\Http\Requests\Suggestions\ApproveSuggestionRequest;
 use App\Http\Requests\Suggestions\GetSuggestionsRequest;
 use App\Http\Requests\Suggestions\LikeSuggestionRequest;
 use App\Http\Requests\Suggestions\StoreSuggestionRequest;
+use App\Http\Requests\Suggestions\UpdateSuggestionRequest;
 use App\Http\Resources\SuggestionApproveResource;
 use App\Http\Resources\SuggestionResource;
 use App\Http\Resources\SuggestionStoreResource;
@@ -151,6 +152,46 @@ class SuggestionController extends Controller
         return response()->json([
             'message' => 'Suggestion approved successfully',
             'suggestion' => new SuggestionApproveResource($result['suggestion']),
+        ], 200);
+    }
+
+    /**
+     * Update a pending suggestion snapshot.
+     */
+    public function update(UpdateSuggestionRequest $request): JsonResponse
+    {
+        $suggestionId = (int) $request->input('suggestion_id');
+        $suggestion = Suggestion::find($suggestionId);
+
+        if (! $suggestion) {
+            return response()->json([
+                'message' => 'Suggestion not found.',
+            ], 404);
+        }
+
+        // Authorize using SuggestionPolicy (only suggestion creator can update)
+        if (Gate::denies('update', $suggestion)) {
+            return response()->json([
+                'message' => 'You are not allowed to update this suggestion.',
+            ], 403);
+        }
+
+        // Approved suggestions cannot be edited
+        if ($suggestion->isApproved) {
+            return response()->json([
+                'message' => 'Approved suggestions cannot be updated.',
+            ], 403);
+        }
+
+        $text = $request->input('text');
+        $ingredients = $request->input('ingredients', []);
+        $instructions = $request->input('instructions', []);
+
+        $result = $this->suggestionService->updateSuggestion($suggestion, $text, $ingredients, $instructions);
+
+        return response()->json([
+            'message' => 'Suggestion updated successfully',
+            'suggestion' => new SuggestionStoreResource($result['suggestion']),
         ], 200);
     }
 }

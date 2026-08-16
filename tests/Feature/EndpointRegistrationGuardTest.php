@@ -22,6 +22,7 @@ dataset('task_1_2_endpoints', [
     'DELETE /api/like-comment/' => ['DELETE', 'api/like-comment', '/api/like-comment/', true],
     'GET /api/suggestions/' => ['GET', 'api/suggestions', '/api/suggestions/', true],
     'POST /api/suggestion/' => ['POST', 'api/suggestion', '/api/suggestion/', true],
+    'PUT /api/suggestion/' => ['PUT', 'api/suggestion', '/api/suggestion/', true],
     'POST /api/like-suggestion/' => ['POST', 'api/like-suggestion', '/api/like-suggestion/', true],
     'DELETE /api/like-suggestion/' => ['DELETE', 'api/like-suggestion', '/api/like-suggestion/', true],
     'PATCH /api/approve-suggestion/' => ['PATCH', 'api/approve-suggestion', '/api/approve-suggestion/', true],

@@ -14,4 +14,12 @@ class SuggestionPolicy
     {
         return $suggestion->receipt && $suggestion->receipt->user_id === $user->user_id;
     }
+
+    /**
+     * Determine whether the user can update the suggestion.
+     */
+    public function update(User $user, Suggestion $suggestion): bool
+    {
+        return $suggestion->user_id === $user->user_id;
+    }
 }

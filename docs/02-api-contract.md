@@ -28,6 +28,7 @@ Below is the verified checklist of all endpoints assigned for Authentication, Pr
 | `DELETE` | `/api/like-comment/` | Required | Remove like from a comment | Body: `comment_id` |
 | `GET` | `/api/suggestions/` | Required | View suggestions for a receipt | Query: `receipt_id`, `page`, `per_page` |
 | `POST` | `/api/suggestion/` | Required | Add suggestion with snapshot | Body: `receipt_id`, `text` |
+| `PUT` | `/api/suggestion/` | Required | Update pending suggestion snapshot | Body: `suggestion_id`, `text`, `ingredients[]`, `instructions[]` |
 | `POST` | `/api/like-suggestion/` | Required | Like a suggestion | Body: `suggestion_id` |
 | `DELETE` | `/api/like-suggestion/` | Required | Remove like from a suggestion | Body: `suggestion_id` |
 | `PATCH` | `/api/approve-suggestion/` | Required | Approve a suggestion | Body: `suggestion_id` |
@@ -905,6 +906,139 @@ Required
 ```json
 {
     "message": "Unauthenticated."
+}
+```
+
+#### `422 Validation`
+```json
+{
+    "message": "The given data was invalid.",
+    "errors": {
+        "field": [
+            "The field is invalid."
+        ]
+    }
+}
+```
+
+---
+
+## Update pending suggestion snapshot
+
+### Method
+`PUT`
+
+### URL
+`{{baseUrl}}/api/suggestion/`
+
+### Authentication
+Required
+
+### Headers
+* `Authorization: Bearer {{authToken}}`
+* `Accept: application/json`
+* `Content-Type: application/json`
+
+### Notes
+* Only the authenticated user who created the suggestion can update it.
+* Approved suggestions cannot be updated.
+* The request body represents the complete new snapshot of ingredients and instructions for the suggestion.
+* Updates are executed inside a database transaction and do not modify the original receipt.
+
+### Request Body (raw JSON)
+```json
+{
+  "suggestion_id": 1,
+  "text": "Updated suggestion text",
+  "ingredients": [
+    {
+      "name": "Pasta",
+      "quantity": 200,
+      "unit": "g",
+      "isAssigned": false
+    },
+    {
+      "name": "Garlic",
+      "quantity": 2,
+      "unit": "cloves",
+      "isAssigned": false
+    }
+  ],
+  "instructions": [
+    {
+      "step_number": 1,
+      "instruction": "Boil the pasta."
+    },
+    {
+      "step_number": 2,
+      "instruction": "Add garlic and sauté."
+    }
+  ]
+}
+```
+
+### Responses
+#### `200 OK`
+```json
+{
+    "message": "Suggestion updated successfully",
+    "suggestion": {
+        "id": 1,
+        "user_id": 2,
+        "receipt_id": 1,
+        "text": "Updated suggestion text",
+        "isApproved": false,
+        "timestamp": "2026-08-10T18:00:00Z",
+        "ingredients": [
+            {
+                "id": 1,
+                "name": "Pasta",
+                "quantity": 200,
+                "unit": "g",
+                "isAssigned": false
+            },
+            {
+                "id": 2,
+                "name": "Garlic",
+                "quantity": 2,
+                "unit": "cloves",
+                "isAssigned": false
+            }
+        ],
+        "instructions": [
+            {
+                "id": 1,
+                "step_number": 1,
+                "instruction": "Boil the pasta."
+            },
+            {
+                "id": 2,
+                "step_number": 2,
+                "instruction": "Add garlic and sauté."
+            }
+        ]
+    }
+}
+```
+
+#### `401 Unauthenticated`
+```json
+{
+    "message": "Unauthenticated."
+}
+```
+
+#### `403 Forbidden`
+```json
+{
+    "message": "You are not allowed to update this suggestion."
+}
+```
+
+#### `404 Not Found`
+```json
+{
+    "message": "Suggestion not found."
 }
 ```
 

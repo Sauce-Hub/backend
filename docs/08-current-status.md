@@ -137,5 +137,15 @@ Developer 2 must adhere to the following decisions and patterns when implementin
   - Added comprehensive test suite in `tests/Feature/Suggestions/ViewSuggestionsTest.php` verifying instructions and ingredients retrieval, `step_number` ordering, empty array responses, user isolation, pagination, likes metadata, and contract casing.
   - Verified: 169 automated tests passing (825 assertions), Pint code formatting verified with 0 violations.
 
+- **Task 4.1 — Update Pending Suggestion Snapshot**: COMPLETED
+  - Implemented `PUT /api/suggestion/` enabling suggestion authors to edit and save a complete suggestion snapshot before approval.
+  - Form Request `UpdateSuggestionRequest` validates `suggestion_id`, `text` (max 2000), `ingredients` array (`name`, numeric `quantity > 0`, `unit`, optional `isAssigned`), and `instructions` array (integer `step_number >= 1`, string `instruction`).
+  - Enforced authorization via `SuggestionPolicy::update()` ensuring only the suggestion author can update it (`403 Forbidden` for non-owners).
+  - Protected approved suggestions from updates (`403 Forbidden: Approved suggestions cannot be updated.`).
+  - Atomic snapshot replacement executed inside `DB::transaction()`: updates text, deletes previous suggestion ingredients and instructions, creates new submitted ingredients and instructions with `receipt_id = null` and `suggestion_id = $suggestion->id`, preserving original recipe integrity and ordering instructions by `step_number ASC`.
+  - Added full test suite in `tests/Feature/Suggestions/UpdateSuggestionTest.php` covering authorization, snapshot editing, recipe isolation, validation, nonexistent 404, approved guard 403, and atomic rollback.
+  - Synchronized `docs/02-api-contract.md` with full endpoint documentation.
+  - Verified: 180 automated tests passing (923 assertions), Pint code formatting verified with 0 violations.
+
 ### Next Pending Task
-- **Task 3.3 — Recipe Suggestions Pipeline: Update & Approval Workflow** (Awaiting approval)
+- **Task 4.2 — Recipe Suggestions Pipeline: Suggestion Approval & Recipe Overwrite Workflow** (Awaiting approval)

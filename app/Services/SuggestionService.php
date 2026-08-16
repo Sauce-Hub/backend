@@ -192,4 +192,51 @@ class SuggestionService
             'suggestion' => $suggestion,
         ];
     }
+
+    /**
+     * Update a pending suggestion's text, ingredients snapshot, and instructions snapshot atomically.
+     */
+    public function updateSuggestion(Suggestion $suggestion, string $text, array $ingredientsData, array $instructionsData): array
+    {
+        return DB::transaction(function () use ($suggestion, $text, $ingredientsData, $instructionsData) {
+            // 1. Update suggestion text (preserving isApproved = false)
+            $suggestion->update([
+                'text' => $text,
+            ]);
+
+            // 2. Delete existing suggestion ingredients
+            $suggestion->ingredients()->delete();
+
+            // 3. Create submitted suggestion ingredients
+            foreach ($ingredientsData as $ingredient) {
+                $suggestion->ingredients()->create([
+                    'name' => $ingredient['name'],
+                    'quantity' => $ingredient['quantity'],
+                    'unit' => $ingredient['unit'],
+                    'isAssigned' => $ingredient['isAssigned'] ?? false,
+                    'receipt_id' => null, // Enforces PostgreSQL CHECK constraint
+                ]);
+            }
+
+            // 4. Delete existing suggestion instructions
+            $suggestion->instructions()->delete();
+
+            // 5. Create submitted suggestion instructions
+            foreach ($instructionsData as $instruction) {
+                $suggestion->instructions()->create([
+                    'step_number' => $instruction['step_number'],
+                    'instruction' => $instruction['instruction'],
+                    'receipt_id' => null, // Enforces PostgreSQL CHECK constraint
+                ]);
+            }
+
+            // 6. Reload updated relationships
+            $suggestion->load(['ingredients', 'instructions']);
+
+            return [
+                'success' => true,
+                'suggestion' => $suggestion,
+            ];
+        });
+    }
 }
