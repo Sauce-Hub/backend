@@ -384,7 +384,7 @@ collection = {
                                         "receipt_id": 1,
                                         "name": "Creamy Garlic Pasta",
                                         "caption": "A quick and delicious homemade Italian pasta.",
-                                        "category": "Dinner",
+                                        "category": "DINNER",
                                         "estimated_time": 25,
                                         "Calories": 450,
                                         "Fats": 15,
@@ -818,7 +818,7 @@ collection = {
                                                 "id": 11,
                                                 "name": "Garlic",
                                                 "quantity": 2,
-                                                "unit": "cloves",
+                                                "unit": "piece",
                                                 "isAssigned": False
                                             }
                                         ],
@@ -979,7 +979,7 @@ collection = {
                                     {
                                         "name": "Garlic",
                                         "quantity": 3,
-                                        "unit": "cloves",
+                                        "unit": "piece",
                                         "isAssigned": False
                                     },
                                     {
@@ -1024,7 +1024,7 @@ collection = {
                                 ],
                                 "body": {
                                     "mode": "raw",
-                                    "raw": "{\n  \"suggestion_id\": 1,\n  \"text\": \"Updated suggestion with adjusted garlic quantity\",\n  \"ingredients\": [\n    {\n      \"name\": \"Pasta\",\n      \"quantity\": 250,\n      \"unit\": \"g\",\n      \"isAssigned\": false\n    },\n    {\n      \"name\": \"Garlic\",\n      \"quantity\": 3,\n      \"unit\": \"cloves\",\n      \"isAssigned\": false\n    }\n  ],\n  \"instructions\": [\n    {\n      \"step_number\": 1,\n      \"instruction\": \"Boil pasta in salted water until al dente.\"\n    },\n    {\n      \"step_number\": 2,\n      \"instruction\": \"Sauté minced garlic in olive oil.\"\n    }\n  ]\n}",
+                                    "raw": "{\n  \"suggestion_id\": 1,\n  \"text\": \"Updated suggestion with adjusted garlic quantity\",\n  \"ingredients\": [\n    {\n      \"name\": \"Pasta\",\n      \"quantity\": 250,\n      \"unit\": \"g\",\n      \"isAssigned\": false\n    },\n    {\n      \"name\": \"Garlic\",\n      \"quantity\": 3,\n      \"unit\": \"piece\",\n      \"isAssigned\": false\n    }\n  ],\n  \"instructions\": [\n    {\n      \"step_number\": 1,\n      \"instruction\": \"Boil pasta in salted water until al dente.\"\n    },\n    {\n      \"step_number\": 2,\n      \"instruction\": \"Sauté minced garlic in olive oil.\"\n    }\n  ]\n}",
                                     "options": {"raw": {"language": "json"}}
                                 },
                                 "url": {"raw": "{{baseUrl}}/api/suggestion/", "host": ["{{baseUrl}}"], "path": ["api", "suggestion", ""]}
@@ -1054,7 +1054,7 @@ collection = {
                                             "id": 13,
                                             "name": "Garlic",
                                             "quantity": 3,
-                                            "unit": "cloves",
+                                            "unit": "piece",
                                             "isAssigned": False
                                         }
                                     ],

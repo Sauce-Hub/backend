@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Favorites;
 use App\Models\Receipt;
+use Illuminate\Http\Request;
 
 class FavoritesController extends Controller
 {
@@ -25,14 +24,14 @@ class FavoritesController extends Controller
         $query = Receipt::whereHas('favoritedBy', function ($q) use ($userId) {
             $q->where('users.user_id', $userId);
         })
-        ->with(['user', 'likedBy' => function ($q) use ($userId) {
-            $q->where('users.user_id', $userId);
-        }])
-        ->withCount([
-            'likedBy as likes_count',
-            'comments as comments_count',
-            'favoritedBy as favorites_count',
-        ]);
+            ->with(['user', 'likedBy' => function ($q) use ($userId) {
+                $q->where('users.user_id', $userId);
+            }])
+            ->withCount([
+                'likedBy as likes_count',
+                'comments as comments_count',
+                'favoritedBy as favorites_count',
+            ]);
 
         $receipts = $query->paginate($perPage, ['*'], 'page', $page);
 
@@ -66,13 +65,7 @@ class FavoritesController extends Controller
         ]);
     }
 
-    public function add(Request $request)
-    {
-        
-    }
+    public function add(Request $request) {}
 
-    public function remove(Request $request)
-    {
-        
-    }
+    public function remove(Request $request) {}
 }

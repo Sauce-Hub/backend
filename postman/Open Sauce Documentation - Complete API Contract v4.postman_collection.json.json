@@ -578,7 +578,7 @@
                   "value": "application/json"
                 }
               ],
-              "body": "{\n  \"data\": [\n    {\n      \"receipt_id\": 1,\n      \"name\": \"Pasta\",\n      \"caption\": \"Quick pasta\",\n      \"category\": \"Dinner\",\n      \"estimated_time\": \"20 min\",\n      \"Calories\": 500,\n      \"Fats\": 15,\n      \"Carbs\": 70,\n      \"Protein\": 20,\n      \"timestamp\": \"2026-08-10T18:00:00Z\",\n      \"user\": {\n        \"user_id\": 1,\n        \"name\": \"Ahmed\"\n      },\n      \"likes_count\": 3,\n      \"comments_count\": 2,\n      \"favorites_count\": 1,\n      \"is_liked\": false,\n      \"is_favorited\": true\n    }\n  ],\n  \"meta\": {\n    \"current_page\": 1,\n    \"per_page\": 20,\n    \"total\": 1,\n    \"last_page\": 1\n  }\n}",
+              "body": "{\n  \"data\": [\n    {\n      \"receipt_id\": 1,\n      \"name\": \"Pasta\",\n      \"caption\": \"Quick pasta\",\n      \"category\": \"DINNER\",\n      \"estimated_time\": \"20 min\",\n      \"Calories\": 500,\n      \"Fats\": 15,\n      \"Carbs\": 70,\n      \"Protein\": 20,\n      \"timestamp\": \"2026-08-10T18:00:00Z\",\n      \"user\": {\n        \"user_id\": 1,\n        \"name\": \"Ahmed\"\n      },\n      \"likes_count\": 3,\n      \"comments_count\": 2,\n      \"favorites_count\": 1,\n      \"is_liked\": false,\n      \"is_favorited\": true\n    }\n  ],\n  \"meta\": {\n    \"current_page\": 1,\n    \"per_page\": 20,\n    \"total\": 1,\n    \"last_page\": 1\n  }\n}",
               "description": "200 OK"
             },
             {
@@ -1159,7 +1159,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"Pasta\",\n  \"caption\": \"Quick pasta\",\n  \"category\": \"Dinner\",\n  \"estimated_time\": \"20 min\",\n  \"Calories\": 500,\n  \"Fats\": 15,\n  \"Carbs\": 70,\n  \"Protein\": 20,\n  \"ingredients\": [\n    {\n      \"name\": \"Pasta\",\n      \"quantity\": 200,\n      \"unit\": \"g\",\n      \"isAssigned\": false\n    }\n  ]\n}",
+              "raw": "{\n  \"name\": \"Pasta\",\n  \"caption\": \"Quick pasta\",\n  \"category\": \"DINNER\",\n  \"estimated_time\": \"20 min\",\n  \"Calories\": 500,\n  \"Fats\": 15,\n  \"Carbs\": 70,\n  \"Protein\": 20,\n  \"ingredients\": [\n    {\n      \"name\": \"Pasta\",\n      \"quantity\": 200,\n      \"unit\": \"g\",\n      \"isAssigned\": false\n    }\n  ]\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1198,7 +1198,7 @@
                 },
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"name\": \"Pasta\",\n  \"caption\": \"Quick pasta\",\n  \"category\": \"Dinner\",\n  \"estimated_time\": \"20 min\",\n  \"Calories\": 500,\n  \"Fats\": 15,\n  \"Carbs\": 70,\n  \"Protein\": 20,\n  \"ingredients\": [\n    {\n      \"name\": \"Pasta\",\n      \"quantity\": 200,\n      \"unit\": \"g\",\n      \"isAssigned\": false\n    }\n  ]\n}",
+                  "raw": "{\n  \"name\": \"Pasta\",\n  \"caption\": \"Quick pasta\",\n  \"category\": \"DINNER\",\n  \"estimated_time\": \"20 min\",\n  \"Calories\": 500,\n  \"Fats\": 15,\n  \"Carbs\": 70,\n  \"Protein\": 20,\n  \"ingredients\": [\n    {\n      \"name\": \"Pasta\",\n      \"quantity\": 200,\n      \"unit\": \"g\",\n      \"isAssigned\": false\n    }\n  ]\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -1214,7 +1214,7 @@
                   "value": "application/json"
                 }
               ],
-              "body": "{\n  \"message\": \"Post created successfully\",\n  \"receipt\": {\n    \"receipt_id\": 1,\n    \"name\": \"Pasta\",\n    \"caption\": \"Quick pasta\",\n    \"category\": \"Dinner\",\n    \"estimated_time\": \"20 min\",\n    \"Calories\": 500,\n    \"Fats\": 15,\n    \"Carbs\": 70,\n    \"Protein\": 20,\n    \"timestamp\": \"2026-08-10T18:00:00Z\",\n    \"user\": {\n      \"user_id\": 1,\n      \"name\": \"Ahmed\"\n    },\n    \"ingredients\": [\n      {\n        \"id\": 1,\n        \"name\": \"Pasta\",\n        \"quantity\": 200,\n        \"unit\": \"g\",\n        \"isAssigned\": false\n      }\n    ]\n  }\n}",
+              "body": "{\n  \"message\": \"Post created successfully\",\n  \"receipt\": {\n    \"receipt_id\": 1,\n    \"name\": \"Pasta\",\n    \"caption\": \"Quick pasta\",\n    \"category\": \"DINNER\",\n    \"estimated_time\": \"20 min\",\n    \"Calories\": 500,\n    \"Fats\": 15,\n    \"Carbs\": 70,\n    \"Protein\": 20,\n    \"timestamp\": \"2026-08-10T18:00:00Z\",\n    \"user\": {\n      \"user_id\": 1,\n      \"name\": \"Ahmed\"\n    },\n    \"ingredients\": [\n      {\n        \"id\": 1,\n        \"name\": \"Pasta\",\n        \"quantity\": 200,\n        \"unit\": \"g\",\n        \"isAssigned\": false\n      }\n    ]\n  }\n}",
               "description": "201 Created"
             },
             {
@@ -1247,7 +1247,7 @@
                 },
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"name\": \"Pasta\",\n  \"caption\": \"Quick pasta\",\n  \"category\": \"Dinner\",\n  \"estimated_time\": \"20 min\",\n  \"Calories\": 500,\n  \"Fats\": 15,\n  \"Carbs\": 70,\n  \"Protein\": 20,\n  \"ingredients\": [\n    {\n      \"name\": \"Pasta\",\n      \"quantity\": 200,\n      \"unit\": \"g\",\n      \"isAssigned\": false\n    }\n  ]\n}",
+                  "raw": "{\n  \"name\": \"Pasta\",\n  \"caption\": \"Quick pasta\",\n  \"category\": \"DINNER\",\n  \"estimated_time\": \"20 min\",\n  \"Calories\": 500,\n  \"Fats\": 15,\n  \"Carbs\": 70,\n  \"Protein\": 20,\n  \"ingredients\": [\n    {\n      \"name\": \"Pasta\",\n      \"quantity\": 200,\n      \"unit\": \"g\",\n      \"isAssigned\": false\n    }\n  ]\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -1296,7 +1296,7 @@
                 },
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"name\": \"Pasta\",\n  \"caption\": \"Quick pasta\",\n  \"category\": \"Dinner\",\n  \"estimated_time\": \"20 min\",\n  \"Calories\": 500,\n  \"Fats\": 15,\n  \"Carbs\": 70,\n  \"Protein\": 20,\n  \"ingredients\": [\n    {\n      \"name\": \"Pasta\",\n      \"quantity\": 200,\n      \"unit\": \"g\",\n      \"isAssigned\": false\n    }\n  ]\n}",
+                  "raw": "{\n  \"name\": \"Pasta\",\n  \"caption\": \"Quick pasta\",\n  \"category\": \"DINNER\",\n  \"estimated_time\": \"20 min\",\n  \"Calories\": 500,\n  \"Fats\": 15,\n  \"Carbs\": 70,\n  \"Protein\": 20,\n  \"ingredients\": [\n    {\n      \"name\": \"Pasta\",\n      \"quantity\": 200,\n      \"unit\": \"g\",\n      \"isAssigned\": false\n    }\n  ]\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -1927,7 +1927,7 @@
                   "value": "application/json"
                 }
               ],
-              "body": "{\n  \"data\": [\n    {\n      \"receipt_id\": 1,\n      \"name\": \"Pasta\",\n      \"caption\": \"Quick pasta\",\n      \"category\": \"Dinner\",\n      \"estimated_time\": \"20 min\",\n      \"Calories\": 500,\n      \"Fats\": 15,\n      \"Carbs\": 70,\n      \"Protein\": 20,\n      \"timestamp\": \"2026-08-10T18:00:00Z\"\n    }\n  ],\n  \"meta\": {\n    \"current_page\": 1,\n    \"per_page\": 20,\n    \"total\": 1,\n    \"last_page\": 1\n  }\n}",
+              "body": "{\n  \"data\": [\n    {\n      \"receipt_id\": 1,\n      \"name\": \"Pasta\",\n      \"caption\": \"Quick pasta\",\n      \"category\": \"DINNER\",\n      \"estimated_time\": \"20 min\",\n      \"Calories\": 500,\n      \"Fats\": 15,\n      \"Carbs\": 70,\n      \"Protein\": 20,\n      \"timestamp\": \"2026-08-10T18:00:00Z\"\n    }\n  ],\n  \"meta\": {\n    \"current_page\": 1,\n    \"per_page\": 20,\n    \"total\": 1,\n    \"last_page\": 1\n  }\n}",
               "description": "200 OK"
             },
             {
@@ -4270,7 +4270,7 @@
                   "value": "application/json"
                 }
               ],
-              "body": "{\n  \"receipt_id\": 1,\n  \"name\": \"Pasta\",\n  \"caption\": \"Quick pasta\",\n  \"category\": \"Dinner\",\n  \"estimated_time\": \"20 min\",\n  \"Calories\": 500,\n  \"Fats\": 15,\n  \"Carbs\": 70,\n  \"Protein\": 20,\n  \"timestamp\": \"2026-08-10T18:00:00Z\",\n  \"user\": {\n    \"user_id\": 1,\n    \"name\": \"Ahmed\"\n  },\n  \"likes_count\": 3,\n  \"comments_count\": 2,\n  \"favorites_count\": 1,\n  \"is_liked\": false,\n  \"is_favorited\": true,\n  \"ingredients\": [\n    {\n      \"id\": 1,\n      \"name\": \"Pasta\",\n      \"quantity\": 200,\n      \"unit\": \"g\",\n      \"isAssigned\": false\n    }\n  ],\n  \"comments\": [\n    {\n      \"id\": 1,\n      \"text\": \"Looks great!\",\n      \"timestamp\": \"2026-08-10T18:00:00Z\",\n      \"user\": {\n        \"user_id\": 1,\n        \"name\": \"Ahmed\"\n      },\n      \"likes_count\": 2,\n      \"is_liked\": false\n    }\n  ],\n  \"suggestions\": []\n}",
+              "body": "{\n  \"receipt_id\": 1,\n  \"name\": \"Pasta\",\n  \"caption\": \"Quick pasta\",\n  \"category\": \"DINNER\",\n  \"estimated_time\": \"20 min\",\n  \"Calories\": 500,\n  \"Fats\": 15,\n  \"Carbs\": 70,\n  \"Protein\": 20,\n  \"timestamp\": \"2026-08-10T18:00:00Z\",\n  \"user\": {\n    \"user_id\": 1,\n    \"name\": \"Ahmed\"\n  },\n  \"likes_count\": 3,\n  \"comments_count\": 2,\n  \"favorites_count\": 1,\n  \"is_liked\": false,\n  \"is_favorited\": true,\n  \"ingredients\": [\n    {\n      \"id\": 1,\n      \"name\": \"Pasta\",\n      \"quantity\": 200,\n      \"unit\": \"g\",\n      \"isAssigned\": false\n    }\n  ],\n  \"comments\": [\n    {\n      \"id\": 1,\n      \"text\": \"Looks great!\",\n      \"timestamp\": \"2026-08-10T18:00:00Z\",\n      \"user\": {\n        \"user_id\": 1,\n        \"name\": \"Ahmed\"\n      },\n      \"likes_count\": 2,\n      \"is_liked\": false\n    }\n  ],\n  \"suggestions\": []\n}",
               "description": "200 OK"
             },
             {

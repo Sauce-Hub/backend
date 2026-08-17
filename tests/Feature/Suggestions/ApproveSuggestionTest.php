@@ -171,7 +171,7 @@ test('6. approving suggestion replaces receipt ingredients and instructions with
         'receipt_id' => null,
         'name' => 'Garlic',
         'quantity' => 3.0,
-        'unit' => 'cloves',
+        'unit' => 'piece',
         'isAssigned' => false,
     ]);
 
@@ -180,7 +180,7 @@ test('6. approving suggestion replaces receipt ingredients and instructions with
         'receipt_id' => null,
         'name' => 'Fresh Rosemary',
         'quantity' => 1.5,
-        'unit' => 'sprigs',
+        'unit' => 'tsp',
         'isAssigned' => true,
     ]);
 
@@ -225,7 +225,7 @@ test('6. approving suggestion replaces receipt ingredients and instructions with
         'suggestion_id' => null,
         'name' => 'Garlic',
         'quantity' => 3.0,
-        'unit' => 'cloves',
+        'unit' => 'piece',
         'isAssigned' => false,
     ]);
     $this->assertDatabaseHas('ingredients', [
@@ -233,7 +233,7 @@ test('6. approving suggestion replaces receipt ingredients and instructions with
         'suggestion_id' => null,
         'name' => 'Fresh Rosemary',
         'quantity' => 1.5,
-        'unit' => 'sprigs',
+        'unit' => 'tsp',
         'isAssigned' => true,
     ]);
 

@@ -169,5 +169,14 @@ Developer 2 must adhere to the following decisions and patterns when implementin
     - Logout and token revocation with multi-user token isolation.
   - Verified: 185 automated tests passing (1219 assertions), Pint code formatting verified with 0 violations.
 
+- **Task 7.1 — PHP Backed Enums Refactor (DEC-023)**: COMPLETED
+  - Created `App\Enums\ReceiptCategory` and `App\Enums\IngredientUnit` PHP Backed Enums.
+  - Configured Eloquent `$casts` on `Receipt` and `Ingredient` models.
+  - Integrated `Rule::enum(IngredientUnit::class)` into `UpdateSuggestionRequest`.
+  - Updated `ReceiptFactory`, `IngredientFactory`, and all test fixtures to use typed enum cases.
+  - Added negative test verifying `422 Unprocessable Entity` on invalid unit enum inputs.
+  - Synchronized `docs/01-database-schema.md`, `docs/02-api-contract.md`, `docs/07-decisions-log.md`, and `docs/flutter-api-reference-developer-1.md`.
+  - Verified: 189 automated tests passing (1271 assertions), Pint code formatting verified with 0 violations.
+
 ### Next Pending Task
 - **Sprint / Milestone Review** (Awaiting further instruction)

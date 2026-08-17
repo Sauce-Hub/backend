@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\ReceiptCategory;
 use App\Models\Receipt;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -28,7 +29,7 @@ class ReceiptFactory extends Factory
         return [
             'name' => fake()->words(3, true),
             'caption' => fake()->sentence(),
-            'category' => fake()->randomElement(['BREAKFAST', 'LUNCH', 'DINNER', 'SWEETS', 'HOT DRINKS', 'ICED DRINKS']),
+            'category' => fake()->randomElement(ReceiptCategory::cases())->value,
             'estimated_time' => fake()->randomElement(['15 mins', '30 mins', '1 hour']),
             'Calories' => fake()->numberBetween(100, 1000),
             'Fats' => fake()->numberBetween(0, 50),

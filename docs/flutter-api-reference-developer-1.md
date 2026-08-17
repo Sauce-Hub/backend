@@ -206,7 +206,7 @@ Required (Bearer Token)
       "receipt_id": 1,
       "name": "Pasta",
       "caption": "Quick pasta",
-      "category": "Dinner",
+      "category": "DINNER",
       "estimated_time": "20 min",
       "Calories": 500,
       "Fats": 15,
@@ -224,6 +224,7 @@ Required (Bearer Token)
 **Flutter Notes**
 - No `user_id` is passed by client; identity is derived from the Bearer token.
 - `receipts` contains all recipes created by the authenticated user.
+- `category` is an Enum value (`BREAKFAST`, `LUNCH`, `DINNER`, `SWEETS`, `HOT DRINKS`, `ICED DRINKS`).
 - Note exact PascalCase nutrition fields in `receipts`: `Calories`, `Fats`, `Carbs`, `Protein`.
 
 ---

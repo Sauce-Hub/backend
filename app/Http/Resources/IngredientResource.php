@@ -18,7 +18,7 @@ class IngredientResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'quantity' => (float) $this->quantity,
-            'unit' => $this->unit,
+            'unit' => $this->unit instanceof \BackedEnum ? $this->unit->value : $this->unit,
             'isAssigned' => (bool) $this->isAssigned,
         ];
     }

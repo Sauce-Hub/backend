@@ -18,7 +18,7 @@ class ReceiptResource extends JsonResource
             'receipt_id' => $this->receipt_id,
             'name' => $this->name,
             'caption' => $this->caption,
-            'category' => $this->category,
+            'category' => $this->category instanceof \BackedEnum ? $this->category->value : $this->category,
             'estimated_time' => $this->estimated_time,
             'Calories' => (int) $this->Calories,
             'Fats' => (int) $this->Fats,

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\ReceiptCategory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -59,6 +60,7 @@ class Receipt extends Model
     protected function casts(): array
     {
         return [
+            'category' => ReceiptCategory::class,
             'Calories' => 'integer',
             'Fats' => 'integer',
             'Carbs' => 'integer',

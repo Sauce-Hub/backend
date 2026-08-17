@@ -277,6 +277,36 @@ Date:
 
 ---
 
+## DEC-023 - Adoption of PHP Backed Enums for Receipt Category and Ingredient Unit
+
+Status: APPROVED
+
+Decision:
+1. `Receipt::$category` is restricted to the backed string enum `App\Enums\ReceiptCategory` with cases:
+   - `BREAKFAST` = `'BREAKFAST'`
+   - `LUNCH` = `'LUNCH'`
+   - `DINNER` = `'DINNER'`
+   - `SWEETS` = `'SWEETS'`
+   - `HOT_DRINKS` = `'HOT DRINKS'`
+   - `ICED_DRINKS` = `'ICED DRINKS'`
+2. `Ingredient::$unit` is restricted to the backed string enum `App\Enums\IngredientUnit` with cases:
+   - `G` = `'g'`
+   - `KG` = `'kg'`
+   - `ML` = `'ml'`
+   - `L` = `'l'`
+   - `TSP` = `'tsp'`
+   - `TBSP` = `'tbsp'`
+   - `CUP` = `'cup'`
+   - `PIECE` = `'piece'`
+3. Form Requests (`UpdateSuggestionRequest`, etc.) must validate incoming unit inputs using `Rule::enum(IngredientUnit::class)` to guarantee invalid inputs trigger `422 Unprocessable Entity`.
+4. Models cast `category` to `ReceiptCategory::class` and `unit` to `IngredientUnit::class`.
+5. API Resources guarantee consistent scalar string serialization.
+
+Date:
+2026-08-17
+
+---
+
 # Rule
 
 Every new architecture or business decision must be added here before implementation when it affects other developers.

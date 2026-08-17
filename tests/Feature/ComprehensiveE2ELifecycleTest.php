@@ -125,7 +125,7 @@ test('Complete End-to-End Lifecycle Scenario: Auth, Profile, Comments, Suggestio
         'user_id' => $gordonId,
         'name' => 'Classic Carbonara',
         'caption' => 'Authentic Roman Carbonara',
-        'category' => 'Dinner',
+        'category' => 'DINNER',
         'estimated_time' => '25 min',
         'Calories' => 650,
         'Fats' => 28,
@@ -371,7 +371,7 @@ test('Complete End-to-End Lifecycle Scenario: Auth, Profile, Comments, Suggestio
                 ['name' => 'Artisan Rigatoni', 'quantity' => 250, 'unit' => 'g', 'isAssigned' => true],
                 ['name' => 'Aged Guanciale', 'quantity' => 120, 'unit' => 'g', 'isAssigned' => true],
                 ['name' => 'Truffle Pecorino Romano', 'quantity' => 60, 'unit' => 'g', 'isAssigned' => true],
-                ['name' => 'Organic Egg Yolks', 'quantity' => 4, 'unit' => 'pcs', 'isAssigned' => true],
+                ['name' => 'Organic Egg Yolks', 'quantity' => 4, 'unit' => 'piece', 'isAssigned' => true],
             ],
             'instructions' => [
                 ['step_number' => 1, 'instruction' => 'Boil salted water and cook artisan rigatoni for 11 mins.'],

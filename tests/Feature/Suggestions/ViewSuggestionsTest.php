@@ -84,7 +84,7 @@ test('authenticated user can view suggestions with ingredients and instructions 
         'receipt_id' => null,
         'name' => 'Garlic',
         'quantity' => 2.0,
-        'unit' => 'cloves',
+        'unit' => 'piece',
         'isAssigned' => false,
     ]);
     $ingredient2 = Ingredient::factory()->forSuggestion()->create([
@@ -92,7 +92,7 @@ test('authenticated user can view suggestions with ingredients and instructions 
         'receipt_id' => null,
         'name' => 'Fresh Basil',
         'quantity' => 5.0,
-        'unit' => 'leaves',
+        'unit' => 'g',
         'isAssigned' => true,
     ]);
 
@@ -174,14 +174,14 @@ test('authenticated user can view suggestions with ingredients and instructions 
                             'id' => $ingredient1->id,
                             'name' => 'Garlic',
                             'quantity' => 2.0,
-                            'unit' => 'cloves',
+                            'unit' => 'piece',
                             'isAssigned' => false,
                         ],
                         [
                             'id' => $ingredient2->id,
                             'name' => 'Fresh Basil',
                             'quantity' => 5.0,
-                            'unit' => 'leaves',
+                            'unit' => 'g',
                             'isAssigned' => true,
                         ],
                     ],

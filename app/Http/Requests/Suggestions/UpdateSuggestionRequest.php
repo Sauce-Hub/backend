@@ -2,10 +2,12 @@
 
 namespace App\Http\Requests\Suggestions;
 
+use App\Enums\IngredientUnit;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\Rule;
 
 class UpdateSuggestionRequest extends FormRequest
 {
@@ -30,7 +32,7 @@ class UpdateSuggestionRequest extends FormRequest
             'ingredients' => ['present', 'array'],
             'ingredients.*.name' => ['required', 'string'],
             'ingredients.*.quantity' => ['required', 'numeric', 'gt:0'],
-            'ingredients.*.unit' => ['required', 'string'],
+            'ingredients.*.unit' => ['required', Rule::enum(IngredientUnit::class)],
             'ingredients.*.isAssigned' => ['nullable', 'boolean'],
             'instructions' => ['present', 'array'],
             'instructions.*.step_number' => ['required', 'integer', 'min:1'],

@@ -75,7 +75,7 @@ test('update suggestion validates field constraints and types', function () {
                 [
                     'name' => 'Garlic',
                     'quantity' => 0, // must be > 0
-                    'unit' => 'cloves',
+                    'unit' => 'piece',
                 ],
             ],
             'instructions' => [],
@@ -392,7 +392,7 @@ test('updating suggestion does not modify original recipe or its ingredients and
                 [
                     'name' => 'Suggestion Onion',
                     'quantity' => 1.0,
-                    'unit' => 'pc',
+                    'unit' => 'piece',
                     'isAssigned' => false,
                 ],
             ],
@@ -495,4 +495,39 @@ test('failed update rolls back transaction and preserves old snapshot and text',
     $this->assertDatabaseMissing('ingredients', [
         'name' => 'New ingredient that must be rolled back',
     ]);
+});
+
+test('updating suggestion rejects invalid unit with 422 unprocessable entity', function () {
+    $author = User::factory()->create();
+    $receipt = Receipt::factory()->create();
+    $suggestion = Suggestion::factory()->create([
+        'user_id' => $author->user_id,
+        'receipt_id' => $receipt->receipt_id,
+        'text' => 'Original text',
+        'isApproved' => false,
+    ]);
+
+    $token = $author->createToken('test-token')->plainTextToken;
+
+    $response = $this->withHeader('Authorization', 'Bearer '.$token)
+        ->putJson('/api/suggestion/', [
+            'suggestion_id' => $suggestion->id,
+            'text' => 'Updated text',
+            'ingredients' => [
+                [
+                    'name' => 'Garlic',
+                    'quantity' => 2,
+                    'unit' => 'invalid_unit_not_in_enum',
+                ],
+            ],
+            'instructions' => [
+                [
+                    'step_number' => 1,
+                    'instruction' => 'Step 1',
+                ],
+            ],
+        ]);
+
+    $response->assertStatus(422)
+        ->assertJsonValidationErrors(['ingredients.0.unit']);
 });

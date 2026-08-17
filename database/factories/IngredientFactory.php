@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\IngredientUnit;
 use App\Models\Ingredient;
 use App\Models\Receipt;
 use App\Models\Suggestion;
@@ -29,7 +30,7 @@ class IngredientFactory extends Factory
         return [
             'name' => fake()->word(),
             'quantity' => fake()->randomFloat(2, 0.1, 10.0),
-            'unit' => fake()->randomElement(['g', 'kg', 'ml', 'l', 'tsp', 'tbsp', 'cup', 'piece']),
+            'unit' => fake()->randomElement(IngredientUnit::cases())->value,
             'isAssigned' => fake()->boolean(),
             'receipt_id' => Receipt::factory(),
             'suggestion_id' => null,
