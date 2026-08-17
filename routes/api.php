@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SuggestionController;
+use App\Http\Controllers\FavoritesController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -41,4 +42,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/like-suggestion/', [SuggestionController::class, 'like']);
     Route::delete('/like-suggestion/', [SuggestionController::class, 'unlike']);
     Route::patch('/approve-suggestion/', [SuggestionController::class, 'approve']);
+
+    Route::get('/favorites/', [FavoritesController::class, 'index']);
+    Route::post('/add-favorite/', [FavoritesController::class, 'add']);
+    Route::delete('/remove-favorite/', [FavoritesController::class, 'remove']);
 });

@@ -29,7 +29,7 @@ class IngredientFactory extends Factory
         return [
             'name' => fake()->word(),
             'quantity' => fake()->randomFloat(2, 0.1, 10.0),
-            'unit' => fake()->randomElement(['g', 'ml', 'pcs', 'tbsp']),
+            'unit' => fake()->randomElement(['g', 'kg', 'ml', 'l', 'tsp', 'tbsp', 'cup', 'piece']),
             'isAssigned' => fake()->boolean(),
             'receipt_id' => Receipt::factory(),
             'suggestion_id' => null,

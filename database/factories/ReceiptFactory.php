@@ -28,7 +28,7 @@ class ReceiptFactory extends Factory
         return [
             'name' => fake()->words(3, true),
             'caption' => fake()->sentence(),
-            'category' => fake()->word(),
+            'category' => fake()->randomElement(['BREAKFAST', 'LUNCH', 'DINNER', 'SWEETS', 'HOT DRINKS', 'ICED DRINKS']),
             'estimated_time' => fake()->randomElement(['15 mins', '30 mins', '1 hour']),
             'Calories' => fake()->numberBetween(100, 1000),
             'Fats' => fake()->numberBetween(0, 50),

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id('receipt_id');
             $table->string('name');
             $table->string('caption');
-            $table->string('category');
+            $table->enum('category', ['BREAKFAST', 'LUNCH', 'DINNER', 'SWEETS', 'HOT DRINKS', 'ICED DRINKS']);
             $table->string('estimated_time');
             $table->integer('Calories');
             $table->integer('Fats');
