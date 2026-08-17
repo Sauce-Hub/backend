@@ -16,7 +16,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->double('quantity');
-            $table->string('unit');
+            $table->enum('unit', ['g', 'kg', 'ml', 'l', 'tsp', 'tbsp', 'cup', 'piece']);
             $table->boolean('isAssigned')->default(false);
             $table->foreignId('receipt_id')->nullable()->constrained('receipts', 'receipt_id')->onDelete('cascade');
             $table->foreignId('suggestion_id')->nullable()->constrained('suggestions', 'id')->onDelete('cascade');
