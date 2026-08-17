@@ -157,5 +157,17 @@ Developer 2 must adhere to the following decisions and patterns when implementin
   - Added comprehensive test suite in `tests/Feature/Suggestions/ApproveSuggestionTest.php` covering ownership authorization, recipe replacement, snapshot preservation, step number ordering, empty snapshot handling, and atomic rollback on failure.
   - Verified: 184 automated tests passing (962 assertions), Pint code formatting verified with 0 violations.
 
+- **Task 6.1 — Comprehensive End-to-End Lifecycle Scenario Verification**: COMPLETED
+  - Added full end-to-end integration scenario in `tests/Feature/ComprehensiveE2ELifecycleTest.php` exercising a complete multi-user lifecycle across all 14 Developer 1 endpoints:
+    - User registration, duplicate guards, password validation, login, and token generation.
+    - Initial profile state and recipe creation with instructions and ingredients.
+    - Full comment cycle (viewing, adding, liking, unliking, idempotency, text limit validation).
+    - Suggestion creation with automated recipe snapshot cloning.
+    - Suggestion viewing with step-ordered instructions and ingredients.
+    - Suggestion snapshot updating with authorization and DB isolation.
+    - Suggestion approval by recipe owner with atomic recipe replacement, snapshot preservation, and post-approval modification guards.
+    - Logout and token revocation with multi-user token isolation.
+  - Verified: 185 automated tests passing (1219 assertions), Pint code formatting verified with 0 violations.
+
 ### Next Pending Task
 - **Sprint / Milestone Review** (Awaiting further instruction)
