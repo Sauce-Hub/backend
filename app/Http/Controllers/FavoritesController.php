@@ -3,14 +3,23 @@
 namespace App\Http\Controllers;
 
 use App\Models\Receipt;
+use App\Services\FavoritesService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class FavoritesController extends Controller
 {
+    protected FavoritesService $favoritesService;
+
+    public function __construct(FavoritesService $favoritesService)
+    {
+        $this->favoritesService = $favoritesService;
+    }
+
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): JsonResponse
     {
         $userId = auth()->id();
 
@@ -21,51 +30,40 @@ class FavoritesController extends Controller
         $page = (int) request('page', 1);
         $perPage = (int) request('per_page', 20);
 
-        $query = Receipt::whereHas('favoritedBy', function ($q) use ($userId) {
-            $q->where('users.user_id', $userId);
-        })
-            ->with(['user', 'likedBy' => function ($q) use ($userId) {
-                $q->where('users.user_id', $userId);
-            }])
-            ->withCount([
-                'likedBy as likes_count',
-                'comments as comments_count',
-                'favoritedBy as favorites_count',
-            ]);
+        $result = $this->favoritesService->getFavoritesForUser($userId, $page, $perPage);
 
-        $receipts = $query->paginate($perPage, ['*'], 'page', $page);
-
-        $data = $receipts->getCollection()->map(function (Receipt $r) {
+        $data = $result['receipts']->getCollection()->map(function (Receipt $receipt) {
             return [
-                'receipt_id' => $r->receipt_id,
-                'name' => $r->name,
-                'caption' => $r->caption,
-                'category' => $r->category,
-                'timestamp' => $r->timestamp ? $r->timestamp->toIso8601String() : null,
+                'receipt_id' => $receipt->receipt_id,
+                'name' => $receipt->name,
+                'caption' => $receipt->caption,
+                'category' => $receipt->category,
+                'timestamp' => $receipt->timestamp ? $receipt->timestamp->toIso8601String() : null,
                 'user' => [
-                    'user_id' => $r->user?->user_id,
-                    'name' => $r->user?->name,
+                    'user_id' => $receipt->user?->user_id,
+                    'name' => $receipt->user?->name,
                 ],
-                'likes_count' => (int) $r->likes_count,
-                'comments_count' => (int) $r->comments_count,
-                'favorites_count' => (int) $r->favorites_count,
-                'is_liked' => $r->relationLoaded('likedBy') && $r->likedBy->isNotEmpty(),
+                'likes_count' => (int) $receipt->likes_count,
+                'comments_count' => (int) $receipt->comments_count,
+                'favorites_count' => (int) $receipt->favorites_count,
+                'is_liked' => $receipt->likedBy->isNotEmpty(),
                 'is_favorited' => true,
             ];
-        })->toArray();
+        })->values()->all();
 
         return response()->json([
             'data' => $data,
-            'meta' => [
-                'current_page' => $receipts->currentPage(),
-                'per_page' => $receipts->perPage(),
-                'total' => $receipts->total(),
-                'last_page' => $receipts->lastPage(),
-            ],
-        ]);
+            'meta' => $result['pagination'],
+        ], 200);
     }
 
-    public function add(Request $request) {}
+    public function add(Request $request)
+    {
+        
+    }
 
-    public function remove(Request $request) {}
+    public function remove(Request $request)
+    {
+        
+    }
 }
