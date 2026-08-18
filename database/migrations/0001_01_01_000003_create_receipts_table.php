@@ -16,11 +16,11 @@ return new class extends Migration
             $table->string('name');
             $table->string('caption');
             $table->enum('category', ['BREAKFAST', 'LUNCH', 'DINNER', 'SWEETS', 'HOT DRINKS', 'ICED DRINKS']);
-            $table->string('estimated_time');
-            $table->integer('Calories');
-            $table->integer('Fats');
-            $table->integer('Carbs');
-            $table->integer('Protein');
+            $table->integer('estimated_time')->unsigned()->default(0);
+            $table->integer('Calories')->unsigned()->default(0);
+            $table->integer('Fats')->unsigned()->default(0);
+            $table->integer('Carbs')->unsigned()->default(0);
+            $table->integer('Protein')->unsigned()->default(0);
             $table->timestamp('timestamp')->useCurrent();
             $table->foreignId('user_id')->constrained('users', 'user_id')->onDelete('cascade');
         });

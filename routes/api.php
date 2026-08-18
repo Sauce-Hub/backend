@@ -51,5 +51,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/get-ai-response/', [ChatbotController::class, 'getResponse']);
 });
 
-Route::get('/search-engine/', [ChatbotController::class, 'searchEngine'])
+Route::post('/search-engine/', [ChatbotController::class, 'searchEngine'])
     ->middleware('ai.service.key');

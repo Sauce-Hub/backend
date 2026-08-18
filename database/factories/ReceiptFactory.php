@@ -30,7 +30,7 @@ class ReceiptFactory extends Factory
             'name' => fake()->words(3, true),
             'caption' => fake()->sentence(),
             'category' => fake()->randomElement(ReceiptCategory::cases())->value,
-            'estimated_time' => fake()->randomElement(['15 mins', '30 mins', '1 hour']),
+            'estimated_time' => fake()->randomElement([15, 20, 30, 60]),
             'Calories' => fake()->numberBetween(100, 1000),
             'Fats' => fake()->numberBetween(0, 50),
             'Carbs' => fake()->numberBetween(0, 100),
