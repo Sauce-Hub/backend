@@ -35,4 +35,32 @@ class FavoritesService
             ],
         ];
     }
+
+    public function addFavorite(int $userId, int $receiptId): array
+    {
+        $receipt = Receipt::find($receiptId);
+
+        if (! $receipt) {
+            return [
+                'success' => false,
+                'message' => 'Receipt not found.',
+            ];
+        }
+
+        // Check if the favorite already exists
+        if ($receipt->favoritedBy()->where('users.user_id', $userId)->exists()) {
+            return [
+                'success' => false,
+                'message' => 'Favorite already exists.',
+            ];
+        }
+
+        // Add the favorite
+        $receipt->favoritedBy()->attach($userId);
+
+        return [
+            'success' => true,
+            'message' => 'Favorite added successfully.',
+        ];
+    }
 }

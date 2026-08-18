@@ -59,7 +59,18 @@ class FavoritesController extends Controller
 
     public function add(Request $request)
     {
-        
+        $receiptId = $request['receipt_id'];
+        $userId = auth()->id();
+
+        if (! $userId) {
+            return response()->json([
+                'message' => 'Unauthenticated.'
+            ], 401);
+        }
+
+        $result = $this->favoritesService->addFavorite($userId, $receiptId);
+
+        return response()->json($result, $result['success'] ? 200 : 400);
     }
 
     public function remove(Request $request)
