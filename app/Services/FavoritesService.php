@@ -47,7 +47,6 @@ class FavoritesService
             ];
         }
 
-        // Check if the favorite already exists
         if ($receipt->favoritedBy()->where('users.user_id', $userId)->exists()) {
             return [
                 'success' => false,
@@ -55,12 +54,37 @@ class FavoritesService
             ];
         }
 
-        // Add the favorite
         $receipt->favoritedBy()->attach($userId);
 
         return [
             'success' => true,
             'message' => 'Favorite added successfully.',
+        ];
+    }
+
+    public function removeFavorite(int $userId, int $receiptId): array
+    {
+        $receipt = Receipt::find($receiptId);
+
+        if (! $receipt) {
+            return [
+                'success' => false,
+                'message' => 'Receipt not found.',
+            ];
+        }
+
+        if (! $receipt->favoritedBy()->where('users.user_id', $userId)->exists()) {
+            return [
+                'success' => false,
+                'message' => 'Favorite does not exist.',
+            ];
+        }
+
+        $receipt->favoritedBy()->detach($userId);
+
+        return [
+            'success' => true,
+            'message' => 'Favorite removed successfully.',
         ];
     }
 }
