@@ -2,19 +2,42 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Http\Requests\Chatbot\GetResponseRequest;
+use App\Services\ChatbotService;
+use Illuminate\Http\JsonResponse;
 
 class ChatbotController extends Controller
 {
-    public function getResponse(GetResponseRequest $request)
-    {
-        $userId = auth()->id();
+    protected ChatbotService $chatbotService;
 
-        if (! $userId) {
-            return response()->json(['message' => 'Unauthenticated'], 401);
+    public function __construct(ChatbotService $chatbotService)
+    {
+        $this->chatbotService = $chatbotService;
+    }
+
+    public function getResponse(GetResponseRequest $request): JsonResponse
+    {
+        $user = $request->user();
+
+        if (! $user) {
+            return response()->json([
+                'message' => 'Unauthenticated.',
+            ], 401);
         }
 
-        
+        $userId = $user->user_id;
+        $userInput = $request->validated('prompt');
+
+        $response = $this->chatbotService->getAIResponse($userInput, $userId);
+
+        if (! $response['success']) {
+            return response()->json([
+                'response' => 'You are out of tokens',
+            ], 402);
+        }
+
+        return response()->json([
+            'response' => $response['response']
+        ], 200);
     }
 }

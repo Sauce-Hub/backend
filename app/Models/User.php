@@ -102,4 +102,9 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Suggestion::class, 'likes_suggestions', 'user_id', 'suggestion_id');
     }
+
+    public function chatHistory(): HasMany
+    {
+        return $this->hasMany(ChatHistory::class, 'user_id', 'user_id');
+    }
 }
