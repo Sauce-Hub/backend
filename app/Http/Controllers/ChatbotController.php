@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Chatbot\GetResponseRequest;
 use App\Services\ChatbotService;
 use Illuminate\Http\JsonResponse;
+use App\Http\Requests\Chatbot\SearchEngineRequest;
 
 class ChatbotController extends Controller
 {
@@ -39,5 +40,10 @@ class ChatbotController extends Controller
         return response()->json([
             'response' => $response['response']
         ], 200);
+    }
+
+    public function searchEngine(SearchEngineRequest $request)
+    {
+        
     }
 }
