@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Favorites\AddOrRemoveRequest;
+use App\Http\Requests\Favorites\GetFavoritesRequest;
 use App\Models\Receipt;
 use App\Services\FavoritesService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class FavoritesController extends Controller
 {
@@ -19,7 +20,7 @@ class FavoritesController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): JsonResponse
+    public function index(GetFavoritesRequest $request): JsonResponse
     {
         $userId = auth()->id();
 
@@ -27,8 +28,8 @@ class FavoritesController extends Controller
             return response()->json(['message' => 'Unauthenticated.'], 401);
         }
 
-        $page = (int) request('page', 1);
-        $perPage = (int) request('per_page', 20);
+        $page = (int) $request->query('page', 1);
+        $perPage = (int) $request->query('per_page', 20);
 
         $result = $this->favoritesService->getFavoritesForUser($userId, $page, $perPage);
 
@@ -57,47 +58,67 @@ class FavoritesController extends Controller
         ], 200);
     }
 
-    public function add(Request $request)
+    public function add(AddOrRemoveRequest $request): JsonResponse
     {
-        $receiptId = $request['receipt_id'];
         $userId = auth()->id();
 
         if (! $userId) {
             return response()->json([
-                'message' => 'Unauthenticated.'
+                'message' => 'Unauthenticated.',
             ], 401);
         }
 
+        $receiptId = (int) $request->input('receipt_id');
         $result = $this->favoritesService->addFavorite($userId, $receiptId);
 
         if (! $result['success']) {
+            $status = match ($result['message']) {
+                'Receipt not found.' => 404,
+                'Receipt already in favorites.' => 409,
+                default => 400,
+            };
+
             return response()->json([
                 'message' => $result['message'],
-            ], 400);
+            ], $status);
         }
 
-        return response()->json(["message" => "success"], 200);
+        return response()->json([
+            'message' => $result['message'],
+            'receipt_id' => $receiptId,
+            'is_favorited' => true,
+        ], 201);
     }
 
-    public function remove(Request $request)
+    public function remove(AddOrRemoveRequest $request): JsonResponse
     {
-        $receiptId = $request['receipt_id'];
         $userId = auth()->id();
 
         if (! $userId) {
             return response()->json([
-                'message' => 'Unauthenticated.'
+                'message' => 'Unauthenticated.',
             ], 401);
         }
 
+        $receiptId = (int) $request->input('receipt_id');
         $result = $this->favoritesService->removeFavorite($userId, $receiptId);
 
         if (! $result['success']) {
+            $status = match ($result['message']) {
+                'Receipt not found.' => 404,
+                'Favorite not found.' => 404,
+                default => 400,
+            };
+
             return response()->json([
                 'message' => $result['message'],
-            ], 400);
+            ], $status);
         }
 
-        return response()->json(["message" => "success"], 200);
+        return response()->json([
+            'message' => $result['message'],
+            'receipt_id' => $receiptId,
+            'is_favorited' => false,
+        ], 200);
     }
 }

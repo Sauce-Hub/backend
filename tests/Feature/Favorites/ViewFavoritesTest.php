@@ -16,6 +16,56 @@ test('favorites route requires authentication', function () {
         ]);
 });
 
+test('add favorite requires valid receipt_id', function () {
+    $user = User::factory()->create();
+    $token = $user->createToken('test-token')->plainTextToken;
+
+    $response = $this->withHeader('Authorization', 'Bearer '.$token)
+        ->postJson('/api/add-favorite/', [
+            'receipt_id' => 9999,
+        ]);
+
+    $response->assertStatus(422)
+        ->assertJsonStructure([
+            'message',
+            'errors' => ['receipt_id'],
+        ]);
+});
+
+test('authenticated user can add and remove a favorite receipt', function () {
+    $user = User::factory()->create();
+    $receipt = Receipt::factory()->create();
+    $token = $user->createToken('test-token')->plainTextToken;
+
+    $add = $this->withHeader('Authorization', 'Bearer '.$token)
+        ->postJson('/api/add-favorite/', [
+            'receipt_id' => $receipt->receipt_id,
+        ]);
+
+    $add->assertStatus(201)
+        ->assertJson([
+            'message' => 'success',
+            'is_favorited' => true,
+        ]);
+
+    $user->refresh();
+    expect($user->favorites()->where('receipts.receipt_id', $receipt->receipt_id)->exists())->toBeTrue();
+
+    $remove = $this->withHeader('Authorization', 'Bearer '.$token)
+        ->deleteJson('/api/remove-favorite/', [
+            'receipt_id' => $receipt->receipt_id,
+        ]);
+
+    $remove->assertStatus(200)
+        ->assertJson([
+            'message' => 'success',
+            'is_favorited' => false,
+        ]);
+
+    $user->refresh();
+    expect($user->favorites()->where('receipts.receipt_id', $receipt->receipt_id)->exists())->toBeFalse();
+});
+
 test('authenticated user can view favorites with correct payload structure', function () {
     $user = User::factory()->create(['name' => 'Ahmed']);
     $other = User::factory()->create();

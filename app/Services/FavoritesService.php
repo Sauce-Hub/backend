@@ -50,7 +50,7 @@ class FavoritesService
         if ($receipt->favoritedBy()->where('users.user_id', $userId)->exists()) {
             return [
                 'success' => false,
-                'message' => 'Favorite already exists.',
+                'message' => 'Receipt already in favorites.',
             ];
         }
 
@@ -58,7 +58,7 @@ class FavoritesService
 
         return [
             'success' => true,
-            'message' => 'Favorite added successfully.',
+            'message' => 'success',
         ];
     }
 
@@ -76,7 +76,7 @@ class FavoritesService
         if (! $receipt->favoritedBy()->where('users.user_id', $userId)->exists()) {
             return [
                 'success' => false,
-                'message' => 'Favorite does not exist.',
+                'message' => 'Favorite not found.',
             ];
         }
 
@@ -84,7 +84,7 @@ class FavoritesService
 
         return [
             'success' => true,
-            'message' => 'Favorite removed successfully.',
+            'message' => 'success',
         ];
     }
 }
