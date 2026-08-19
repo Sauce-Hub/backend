@@ -28,7 +28,6 @@ class CreateReceiptRequest extends FormRequest
             'receipt.caption' => 'nullable|string|max:255',
             'receipt.category' => 'required|in:BREAKFAST,LUNCH,DINNER,SWEETS,HOT DRINKS,ICED DRINKS',
             'receipt.image' => 'required|image|max:5120',
-            'timestamp' => 'required',
             'ingredients' => 'required|array',
             'ingredients.*.name' => 'required|string|max:255',
             'ingredients.*.quantity' => 'required|numeric|min:0',

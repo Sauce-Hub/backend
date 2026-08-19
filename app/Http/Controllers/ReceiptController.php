@@ -8,6 +8,7 @@ use App\Http\Requests\Receipt\CreateReceiptRequest;
 use Illuminate\Http\Request;
 use App\Models\Ingredient;
 use App\Models\Instruction;
+use App\Models\User;
 
 class ReceiptController extends Controller
 {
@@ -20,48 +21,58 @@ class ReceiptController extends Controller
         $ingredientsData = $request->input('ingredients');
         $instructionsData = $request->input('instructions');
         $instructionsConcatenated = implode("\n", $instructionsData);
-        $image_url = $request->input('receipt.image')->store('receipts', 'public');
+        $imageUrl = $request->file('receipt.image')->store('receipts', 'public');
 
         $response = Http::post(
             config('services.ai.url') . '/calculate-nutrition/',
             [
                 'ingredients' => $ingredientsData,
-                'instructions' => $instructionsConcatenated
+                'instructions' => $instructionsConcatenated,
             ]
         );
 
-        if ($response) {
-            Receipt::create([
-                'name' => $receiptData['name'],
-                'caption' => $receiptData['caption'] ?? null,
-                'category' => $receiptData['category'],
-                'image_url' => $image_url,
-                'estimated_time' => $response['estimated_time'] ?? 0,
-                'Calories' => $response['Calories'] ?? 0,
-                'Fats' => $response['Fats'] ?? 0,
-                'Carbs' => $response['Carbs'] ?? 0,
-                'Protein' => $response['Protein'] ?? 0,
-                'timestamp' => now(),
-                'user_id' => auth()->id(),
-            ]);
-
-            Instruction::insert(array_map(function ($instruction, $index) {
-                return [
-                    'step_number' => $index + 1,
-                    'instruction' => $instruction,
-                    'receipt_id' => Receipt::latest('receipt_id')->first()->receipt_id,
-                ];
-            }, $instructionsData, array_keys($instructionsData)));
-
-            Ingredient::insert(array_map(function ($ingredient) {
-                return [
-                    'name' => $ingredient['name'],
-                    'quantity' => $ingredient['quantity'],
-                    'unit' => $ingredient['unit'],
-                    'receipt_id' => Receipt::latest('receipt_id')->first()->receipt_id,
-                ];
-            }, $ingredientsData));
+        if (! $response->successful()) {
+            return response()->json([
+                'message' => 'Failed to calculate nutrition.',
+            ], 502);
         }
+
+        $receipt = Receipt::create([
+            'name' => $receiptData['name'],
+            'caption' => $receiptData['caption'] ?? null,
+            'category' => $receiptData['category'],
+            'image_url' => $imageUrl,
+            'estimated_time' => $response['estimated_time'] ?? 0,
+            'Calories' => $response['Calories'] ?? 0,
+            'Fats' => $response['Fats'] ?? 0,
+            'Carbs' => $response['Carbs'] ?? 0,
+            'Protein' => $response['Protein'] ?? 0,
+            'timestamp' => now(),
+            'user_id' => auth()->id(),
+        ]);
+
+        Instruction::insert(array_map(function ($instruction, $index) use ($receipt) {
+            return [
+                'step_number' => $index + 1,
+                'instruction' => $instruction,
+                'receipt_id' => $receipt->receipt_id,
+            ];
+        }, $instructionsData, array_keys($instructionsData)));
+
+        Ingredient::insert(array_map(function ($ingredient) use ($receipt) {
+            return [
+                'name' => $ingredient['name'],
+                'quantity' => $ingredient['quantity'],
+                'unit' => $ingredient['unit'],
+                'isAssigned' => true,
+                'receipt_id' => $receipt->receipt_id,
+            ];
+        }, $ingredientsData));
+
+        return response()->json([
+            'message' => 'Receipt created successfully',
+            'receipt' => $receipt,
+        ], 201);
     }
 
     /**
@@ -69,6 +80,29 @@ class ReceiptController extends Controller
      */
     public function show(Request $request)
     {
-        $receiptId = $request->input('receipt');
+        $receiptId = $request->input('receipt_id');
+        $receipt = Receipt::find($receiptId);
+
+        if (! $receipt) {
+            return response()->json([
+                'message' => 'Not Found'
+            ], 404);
+        }
+
+        $ingredients = Ingredient::where('receipt_id', $receiptId)->where('isAssigned', true)->get();
+        $user = User::find($receipt->user_id);
+        $instructions = Instruction::where('receipt_id', $receiptId)->where('suggestion_id', null)->orderBy('step_number')->get();
+        $instructionsAsStrings = $instructions->pluck('instruction')->toArray();
+
+        return response()->json([
+            'message' => 'success',
+            'receipt' => $receipt,
+            'ingredients' => $ingredients,
+            'instructions' => $instructionsAsStrings,
+            'user' => [
+                'user_id' => $receipt->user_id,
+                'name' => $user->name ?? null,
+            ],
+        ]);
     }
 }

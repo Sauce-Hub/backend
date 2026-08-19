@@ -43,6 +43,7 @@ class Receipt extends Model
         'name',
         'caption',
         'category',
+        'image_url',
         'estimated_time',
         'Calories',
         'Fats',

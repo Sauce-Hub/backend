@@ -126,6 +126,7 @@ test('Complete End-to-End Lifecycle Scenario: Auth, Profile, Comments, Suggestio
         'name' => 'Classic Carbonara',
         'caption' => 'Authentic Roman Carbonara',
         'category' => 'DINNER',
+        'image_url' => 'receipts/classic-carbonara.jpg',
         'estimated_time' => '25 min',
         'Calories' => 650,
         'Fats' => 28,

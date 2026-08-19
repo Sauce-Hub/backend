@@ -77,7 +77,7 @@ class Suggestion extends Model
     }
 
     /**
-     * Get the instructions for the suggestion ordered by step number.
+     * Get the instructions for the suggestion.
      */
     public function instructions(): HasMany
     {
