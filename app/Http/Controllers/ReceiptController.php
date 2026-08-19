@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Models\Ingredient;
 use App\Models\Instruction;
 use App\Models\User;
+use App\Models\Event;
 
 class ReceiptController extends Controller
 {
@@ -138,6 +139,22 @@ class ReceiptController extends Controller
                 'total' => $receipts->total(),
             ],
         ], 200);
+    }
+
+    public function addEvent(Request $request)
+    {
+        $userId = auth()->id();
+
+        if (! $userId) {
+            return response()->json(['message' => 'Unauthenticated.'], 401);
+        }
+
+        Event::create([
+            'user_id' => $userId,
+            'timestamp' => now(),
+        ]);
+
+        return response()->json(['message' => 'done'], 201);
     }
 
     /**
