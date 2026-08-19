@@ -37,7 +37,6 @@ class ReceiptController extends Controller
                 },
                 'receipt.user',
             ])
-            ->orderByDesc('receipt_id')
             ->paginate($perPage, ['*'], 'page', $page);
 
         if ($recommendations->isNotEmpty()) {
@@ -79,6 +78,64 @@ class ReceiptController extends Controller
                 'last_page' => $recommendations->lastPage(),
                 'per_page' => $recommendations->perPage(),
                 'total' => $recommendations->total(),
+            ],
+        ], 200);
+    }
+
+    public function getByCategory(Request $request)
+    {
+        $userId = auth()->id();
+
+        if (! $userId) {
+            return response()->json(['message' => 'Unauthenticated.'], 401);
+        }
+
+        $request->validate([
+            'category' => 'required|string',
+        ]);
+
+        $category = $request->input('category');
+        $perPage = (int) $request->query('per_page', 10);
+        $page = (int) $request->query('page', 1);
+
+        $receipts = Receipt::query()
+            ->where('category', $category)
+            ->with(['user'])
+            ->withCount(['likedBy', 'comments', 'favoritedBy'])
+            ->withExists([
+                'likedBy as is_liked' => fn ($q) => $q->where('user_id', $userId),
+                'favoritedBy as is_favorited' => fn ($q) => $q->where('user_id', $userId),
+            ])
+            ->orderByDesc('receipt_id')
+            ->paginate($perPage, ['*'], 'page', $page);
+
+        $data = $receipts->getCollection()->map(function (Receipt $receipt) {
+            return [
+                'receipt_id' => $receipt->receipt_id,
+                'name' => $receipt->name,
+                'caption' => $receipt->caption,
+                'category' => $receipt->category,
+                'image_url' => $receipt->image_url,
+                'timestamp' => $receipt->timestamp ? $receipt->timestamp->toIso8601String() : null,
+                'user' => [
+                    'user_id' => $receipt->user?->user_id,
+                    'name' => $receipt->user?->name,
+                ],
+                'likes_count' => $receipt->liked_by_count ?? 0,
+                'comments_count' => $receipt->comments_count ?? 0,
+                'favorites_count' => $receipt->favorited_by_count ?? 0,
+                'is_favorited' => (bool) $receipt->is_favorited,
+                'is_liked' => (bool) $receipt->is_liked,
+            ];
+        })->values()->all();
+
+        return response()->json([
+            'data' => $data,
+            'meta' => [
+                'current_page' => $receipts->currentPage(),
+                'last_page' => $receipts->lastPage(),
+                'per_page' => $receipts->perPage(),
+                'total' => $receipts->total(),
             ],
         ], 200);
     }
