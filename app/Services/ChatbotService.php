@@ -26,7 +26,7 @@ class ChatbotService
             ->all();
 
         $response = Http::post(
-            config('services.ai.url') . '/send-prompt/',
+            config('services.ai.url') . '/chat/',
             [
                 'message' => $userInput,
                 'history' => $history
