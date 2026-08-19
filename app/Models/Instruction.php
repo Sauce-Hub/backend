@@ -33,7 +33,6 @@ class Instruction extends Model
         'step_number',
         'instruction',
         'receipt_id',
-        'suggestion_id',
     ];
 
     /**
@@ -54,13 +53,5 @@ class Instruction extends Model
     public function receipt(): BelongsTo
     {
         return $this->belongsTo(Receipt::class, 'receipt_id', 'receipt_id');
-    }
-
-    /**
-     * Get the suggestion that contains the instruction.
-     */
-    public function suggestion(): BelongsTo
-    {
-        return $this->belongsTo(Suggestion::class, 'suggestion_id', 'id');
     }
 }

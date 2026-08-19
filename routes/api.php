@@ -8,6 +8,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SuggestionController;
 use App\Http\Controllers\FavoritesController;
 use App\Http\Controllers\ChatbotController;
+use App\Http\Controllers\ReceiptController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -49,6 +50,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/remove-favorite/', [FavoritesController::class, 'remove']);
 
     Route::get('/get-ai-response/', [ChatbotController::class, 'getResponse']);
+
+    Route::post('/new-post/', [ReceiptController::class, 'store']);
 });
 
 Route::post('/search-engine/', [ChatbotController::class, 'searchEngine'])

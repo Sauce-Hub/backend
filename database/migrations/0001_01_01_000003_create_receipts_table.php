@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('receipts', function (Blueprint $table) {
             $table->id('receipt_id');
             $table->string('name');
-            $table->string('caption');
+            $table->string('caption')->nullable();
             $table->enum('category', ['BREAKFAST', 'LUNCH', 'DINNER', 'SWEETS', 'HOT DRINKS', 'ICED DRINKS']);
             $table->string('image_url');
             $table->integer('estimated_time')->unsigned()->default(0);
