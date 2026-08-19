@@ -51,6 +51,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/get-ai-response/', [ChatbotController::class, 'getResponse']);
 
+    Route::get('/fyp/', [ReceiptController::class, 'index']);
     Route::get('/receipt-details/', [ReceiptController::class, 'show']);
     Route::post('/new-post/', [ReceiptController::class, 'store']);
 });

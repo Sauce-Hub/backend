@@ -95,6 +95,14 @@ class Receipt extends Model
     }
 
     /**
+     * Get the recommendation rows for the receipt.
+     */
+    public function recommendations(): HasMany
+    {
+        return $this->hasMany(Recommendation::class, 'receipt_id', 'receipt_id');
+    }
+
+    /**
      * Get the users who favorited the receipt.
      */
     public function favoritedBy(): BelongsToMany
