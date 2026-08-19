@@ -250,4 +250,32 @@ class ReceiptController extends Controller
             ],
         ]);
     }
+
+    public function likeReceipt(Request $request)
+    {
+        $request->validate([
+            'receipt_id' => 'required|integer|exists:receipts,receipt_id',
+        ]);
+
+        $receipt = Receipt::findOrFail($request->input('receipt_id'));
+        $receipt->likedBy()->syncWithoutDetaching([auth()->id()]);
+
+        return response()->json(['message' => 'success'], 200);
+    }
+
+    public function unlikeReceipt(Request $request)
+    {
+        $request->validate([
+            'receipt_id' => 'required|integer|exists:receipts,receipt_id',
+        ]);
+
+        $receipt = Receipt::findOrFail($request->input('receipt_id'));
+        $detached = $receipt->likedBy()->detach(auth()->id());
+
+        if (! $detached) {
+            return response()->json(['message' => 'Receipt was not liked before.'], 400);
+        }
+
+        return response()->json(['message' => 'success'], 200);
+    }
 }

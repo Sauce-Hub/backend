@@ -56,6 +56,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/add-event/', [ReceiptController::class, 'addEvent']);
     Route::get('/receipt-details/', [ReceiptController::class, 'show']);
     Route::post('/new-post/', [ReceiptController::class, 'store']);
+    Route::post('/like/', [ReceiptController::class, 'likeReceipt']);
+    Route::delete('/unlike/', [ReceiptController::class, 'unlikeReceipt']);
 });
 
 Route::post('/search-engine/', [ChatbotController::class, 'searchEngine'])
