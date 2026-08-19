@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('caption');
             $table->enum('category', ['BREAKFAST', 'LUNCH', 'DINNER', 'SWEETS', 'HOT DRINKS', 'ICED DRINKS']);
+            $table->string('image_url');
             $table->integer('estimated_time')->unsigned()->default(0);
             $table->integer('Calories')->unsigned()->default(0);
             $table->integer('Fats')->unsigned()->default(0);
