@@ -23,63 +23,30 @@ class ReceiptController extends Controller
         }
 
         $perPage = (int) $request->query('per_page', 10);
-        $page = (int) $request->query('page', 1);
 
         $recommendations = Recommendation::query()
             ->where('user_id', $userId)
-            ->where('seen', false)
             ->with([
-                'receipt' => function ($query) use ($userId) {
-                    $query->withCount(['likedBy', 'comments', 'favoritedBy'])
-                        ->withExists([
-                            'likedBy as is_liked' => fn ($q) => $q->where('user_id', $userId),
-                            'favoritedBy as is_favorited' => fn ($q) => $q->where('user_id', $userId),
-                        ]);
-                },
+                'receipt' => fn ($q) => $this->applyReceiptMetrics($q, $userId),
                 'receipt.user',
             ])
-            ->paginate($perPage, ['*'], 'page', $page);
+            ->orderByDesc('id')
+            ->paginate($perPage);
 
-        if ($recommendations->isNotEmpty()) {
-            Recommendation::query()
-                ->whereIn('id', $recommendations->pluck('id'))
-                ->update(['seen' => true]);
+        if ($recommendations->isEmpty()) {
+            return $this->getFallbackFeed($userId, $perPage);
         }
 
-        $data = $recommendations->getCollection()->map(function (Recommendation $recommendation) {
-            $receipt = $recommendation->receipt;
+        Recommendation::query()
+            ->whereIn('id', $recommendations->pluck('id'))
+            ->where('seen', false)
+            ->update(['seen' => true]);
 
-            if (! $receipt) {
-                return null;
-            }
-
-            return [
-                'receipt_id' => $receipt->receipt_id,
-                'name' => $receipt->name,
-                'caption' => $receipt->caption,
-                'category' => $receipt->category,
-                'image_url' => $receipt->image_url,
-                'timestamp' => $receipt->timestamp ? $receipt->timestamp->toIso8601String() : null,
-                'user' => [
-                    'user_id' => $receipt->user?->user_id,
-                    'name' => $receipt->user?->name,
-                ],
-                'likes_count' => $receipt->liked_by_count ?? 0,
-                'comments_count' => $receipt->comments_count ?? 0,
-                'favorites_count' => $receipt->favorited_by_count ?? 0,
-                'is_favorited' => (bool) $receipt->is_favorited,
-                'is_liked' => (bool) $receipt->is_liked,
-            ];
-        })->filter()->values()->all();
+        $receipts = $recommendations->pluck('receipt')->filter();
 
         return response()->json([
-            'data' => $data,
-            'meta' => [
-                'current_page' => $recommendations->currentPage(),
-                'last_page' => $recommendations->lastPage(),
-                'per_page' => $recommendations->perPage(),
-                'total' => $recommendations->total(),
-            ],
+            'data' => $this->formatReceipts($receipts),
+            'meta' => $this->formatMeta($recommendations),
         ], 200);
     }
 
@@ -95,22 +62,47 @@ class ReceiptController extends Controller
             'category' => 'required|string',
         ]);
 
-        $category = $request->input('category');
         $perPage = (int) $request->query('per_page', 10);
-        $page = (int) $request->query('page', 1);
 
         $receipts = Receipt::query()
-            ->where('category', $category)
+            ->where('category', $request->input('category'))
             ->with(['user'])
-            ->withCount(['likedBy', 'comments', 'favoritedBy'])
+            ->tap(fn ($q) => $this->applyReceiptMetrics($q, $userId))
+            ->orderByDesc('receipt_id')
+            ->paginate($perPage);
+
+        return response()->json([
+            'data' => $this->formatReceipts($receipts->items()),
+            'meta' => $this->formatMeta($receipts),
+        ], 200);
+    }
+
+    private function getFallbackFeed(int $userId, int $perPage)
+    {
+        $receipts = Receipt::query()
+            ->with(['user'])
+            ->tap(fn ($q) => $this->applyReceiptMetrics($q, $userId))
+            ->orderByDesc('receipt_id')
+            ->paginate($perPage);
+
+        return response()->json([
+            'data' => $this->formatReceipts($receipts->items()),
+            'meta' => $this->formatMeta($receipts),
+        ], 200);
+    }
+
+    private function applyReceiptMetrics($query, int $userId)
+    {
+        return $query->withCount(['likedBy', 'comments', 'favoritedBy'])
             ->withExists([
                 'likedBy as is_liked' => fn ($q) => $q->where('user_id', $userId),
                 'favoritedBy as is_favorited' => fn ($q) => $q->where('user_id', $userId),
-            ])
-            ->orderByDesc('receipt_id')
-            ->paginate($perPage, ['*'], 'page', $page);
+            ]);
+    }
 
-        $data = $receipts->getCollection()->map(function (Receipt $receipt) {
+    private function formatReceipts(iterable $receipts): array
+    {
+        return collect($receipts)->map(function (Receipt $receipt) {
             return [
                 'receipt_id' => $receipt->receipt_id,
                 'name' => $receipt->name,
@@ -129,16 +121,16 @@ class ReceiptController extends Controller
                 'is_liked' => (bool) $receipt->is_liked,
             ];
         })->values()->all();
+    }
 
-        return response()->json([
-            'data' => $data,
-            'meta' => [
-                'current_page' => $receipts->currentPage(),
-                'last_page' => $receipts->lastPage(),
-                'per_page' => $receipts->perPage(),
-                'total' => $receipts->total(),
-            ],
-        ], 200);
+    private function formatMeta($paginator): array
+    {
+        return [
+            'current_page' => $paginator->currentPage(),
+            'last_page' => $paginator->lastPage(),
+            'per_page' => $paginator->perPage(),
+            'total' => $paginator->total(),
+        ];
     }
 
     public function addEvent(Request $request)
