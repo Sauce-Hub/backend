@@ -25,28 +25,26 @@ class ChatbotService
             })
             ->all();
 
-        $response = Http::withHeaders([
-            'X-API-Key' => config('services.ai.api_key'),
-        ])->post(
-            config('services.ai.url') . '/chat/',
+        $response = Http::post(
+            config('services.ai.url') . '/chat',
             [
                 'message' => $userInput,
-                'history' => $history
+                'history' => $history,
             ]
         );
 
-        if ($response['status'] === 'success') {
-            $aiResponse = $response['response'];
+        $aiResponse = $response->json();
 
+        if ($response->status() === 200 && ($aiResponse['status'] ?? null) === 'success') {
             ChatHistory::create([
                 'user_prompt' => $userInput,
-                'response' => $aiResponse,
+                'response' => $aiResponse['response'] ?? '',
                 'timestamp' => now(),
                 'user_id' => $userId,
             ]);
         }
 
-        return $response;
+        return $aiResponse;
     }
 
     public function search(array $criteria): array

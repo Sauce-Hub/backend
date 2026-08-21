@@ -36,7 +36,7 @@ return [
     ],
 
     'ai' => [
-        'url' => env('AI_SERVICE_URL', 'http://localhost:8000'),
+        'url' => env('AI_SERVICE_URL'),
         'api_key' => env('AI_SERVICE_API_KEY'),
     ]
 

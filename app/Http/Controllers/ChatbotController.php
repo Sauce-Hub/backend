@@ -18,20 +18,12 @@ class ChatbotController extends Controller
 
     public function getResponse(GetResponseRequest $request): JsonResponse
     {
-        $user = $request->user();
-
-        if (! $user) {
-            return response()->json([
-                'message' => 'Unauthenticated.',
-            ], 401);
-        }
-
-        $userId = $user->user_id;
+        $userId = auth()->id();
         $userInput = $request->validated('prompt');
 
         $response = $this->chatbotService->getAIResponse($userInput, $userId);
 
-        if (! $response['success']) {
+        if (($response['status'] ?? null) !== 'success') {
             return response()->json([
                 'response' => 'You are out of tokens',
             ], 402);
