@@ -11,6 +11,7 @@ use App\Models\Ingredient;
 use App\Models\Instruction;
 use App\Models\User;
 use App\Models\Event;
+use Illuminate\Support\Facades\Log;
 
 class ReceiptController extends Controller
 {
@@ -160,18 +161,38 @@ class ReceiptController extends Controller
         $instructionsConcatenated = implode("\n", $instructionsData);
         $imageUrl = $request->file('receipt.image')->store('receipts', 'public');
 
-        $response = Http::post(
-            config('services.ai.url') . '/calculate-nutrition/',
-            [
-                'ingredients' => $ingredientsData,
-                'instructions' => $instructionsConcatenated,
-            ]
-        );
+        $aiData = [
+            'estimated_time' => 0,
+            'Calories' => 0,
+            'Fats' => 0,
+            'Carbs' => 0,
+            'Protein' => 0
+        ];
 
-        if (! $response->successful()) {
-            return response()->json([
-                'message' => 'Failed to calculate nutrition.',
-            ], 502);
+        try {
+            $response = Http::withHeaders([
+                'X-API-Key' => config('services.ai.api_key'),
+            ])->post(
+                config('services.ai.url') . '/calculate-nutrition/',
+                [
+                    'ingredients' => $ingredientsData,
+                    'instructions' => $instructionsConcatenated,
+                ]
+            );
+
+            if ($response->successful()) {
+                $aiData = [
+                    'estimated_time' => $response['estimated_time'] ?? 0,
+                    'Calories' => $response['Calories'] ?? 0,
+                    'Fats' => $response['Fats'] ?? 0,
+                    'Carbs' => $response['Carbs'] ?? 0,
+                    'Protein' => $response['Protein'] ?? 0,
+                ];
+            } else {
+                Log::warning('AI Service returned an error, using default values.');
+            }
+        } catch (\Exception $e) {
+            Log::error('AI Service connection failed: ' . $e->getMessage());
         }
 
         $receipt = Receipt::create([
@@ -179,11 +200,11 @@ class ReceiptController extends Controller
             'caption' => $receiptData['caption'] ?? null,
             'category' => $receiptData['category'],
             'image_url' => $imageUrl,
-            'estimated_time' => $response['estimated_time'] ?? 0,
-            'Calories' => $response['Calories'] ?? 0,
-            'Fats' => $response['Fats'] ?? 0,
-            'Carbs' => $response['Carbs'] ?? 0,
-            'Protein' => $response['Protein'] ?? 0,
+            'estimated_time' => $aiData['estimated_time'] ?? 0,
+            'Calories' => $aiData['Calories'] ?? 0,
+            'Fats' => $aiData['Fats'] ?? 0,
+            'Carbs' => $aiData['Carbs'] ?? 0,
+            'Protein' => $aiData['Protein'] ?? 0,
             'timestamp' => now(),
             'user_id' => auth()->id(),
         ]);
@@ -196,19 +217,21 @@ class ReceiptController extends Controller
             ];
         }, $instructionsData, array_keys($instructionsData)));
 
-        Ingredient::insert(array_map(function ($ingredient) use ($receipt) {
-            return [
-                'name' => $ingredient['name'],
-                'quantity' => $ingredient['quantity'],
-                'unit' => $ingredient['unit'],
-                'isAssigned' => true,
-                'receipt_id' => $receipt->receipt_id,
-            ];
-        }, $ingredientsData));
+        // Storing the ingredients object to return it
+        $ingredients = collect($ingredientsData)->map(function ($ingredient) use ($receipt) {
+        return Ingredient::create([
+            'name' => $ingredient['name'],
+            'quantity' => $ingredient['quantity'],
+            'unit' => $ingredient['unit'],
+            'isAssigned' => true,
+            'receipt_id' => $receipt->receipt_id,
+        ]);
+    });
 
         return response()->json([
-            'message' => 'Receipt created successfully',
+            'message' => 'Post created successfully',
             'receipt' => $receipt,
+            'ingredients' => $ingredients,
         ], 201);
     }
 

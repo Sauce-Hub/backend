@@ -25,7 +25,9 @@ class ChatbotService
             })
             ->all();
 
-        $response = Http::post(
+        $response = Http::withHeaders([
+            'X-API-Key' => config('services.ai.api_key'),
+        ])->post(
             config('services.ai.url') . '/chat/',
             [
                 'message' => $userInput,
