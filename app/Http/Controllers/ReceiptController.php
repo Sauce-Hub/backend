@@ -31,15 +31,19 @@ class ReceiptController extends Controller
                 'receipt' => fn ($q) => $this->applyReceiptMetrics($q, $userId),
                 'receipt.user',
             ])
-            ->orderByDesc('id')
             ->paginate($perPage);
 
         if ($recommendations->isEmpty()) {
             return $this->getFallbackFeed($userId, $perPage);
         }
 
+        $receiptIds = $recommendations
+            ->pluck('receipt_id')
+            ->filter();
+
         Recommendation::query()
-            ->whereIn('id', $recommendations->pluck('id'))
+            ->where('user_id', $userId)
+            ->whereIn('receipt_id', $receiptIds)
             ->where('seen', false)
             ->update(['seen' => true]);
 
