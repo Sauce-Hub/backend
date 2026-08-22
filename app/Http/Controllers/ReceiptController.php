@@ -182,11 +182,11 @@ class ReceiptController extends Controller
             if ($response->status() === 200) {
                 $data = $response->json();
                 $aiData = [
-                    'estimated_time' => $data['estimated_time'] ?? 0,
-                    'Calories' => $data['Calories'] ?? 0,
-                    'Fats' => $data['Fats'] ?? 0,
-                    'Carbs' => $data['Carbs'] ?? 0,
-                    'Protein' => $data['Protein'] ?? 0,
+                    'estimated_time' => (int) $data['estimated_time'] ?? 0,
+                    'Calories' => (int) $data['calories'] ?? 0,
+                    'Fats' => (int) $data['fats'] ?? 0,
+                    'Carbs' => (int) $data['carbs'] ?? 0,
+                    'Protein' => (int) $data['protein'] ?? 0,
                 ];
             } else {
                 Log::warning('AI Service returned an error.', [
