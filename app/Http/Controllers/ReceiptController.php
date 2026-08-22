@@ -96,8 +96,8 @@ class ReceiptController extends Controller
     {
         return $query->withCount(['likedBy', 'comments', 'favoritedBy'])
             ->withExists([
-                'likedBy as is_liked' => fn ($q) => $q->where('user_id', $userId),
-                'favoritedBy as is_favorited' => fn ($q) => $q->where('user_id', $userId),
+                'likedBy as is_liked' => fn ($q) => $q->where('likes_receipts.user_id', $userId),
+                'favoritedBy as is_favorited' => fn ($q) => $q->where('favorites.user_id', $userId),
             ]);
     }
 
