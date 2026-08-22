@@ -156,8 +156,8 @@ class ReceiptController extends Controller
     public function store(CreateReceiptRequest $request)
     {
         $receiptData = $request->input('receipt');
-        $ingredientsData = $request->input('ingredients');
-        $instructionsData = $request->input('instructions');
+        $ingredientsData = $request->input('receipt.ingredients');
+        $instructionsData = $request->input('receipt.instructions');
         $instructionsConcatenated = implode("\n", $instructionsData);
         $imageUrl = $request->file('receipt.image')->store('receipts', 'public');
 
@@ -182,14 +182,17 @@ class ReceiptController extends Controller
 
             if ($response->successful()) {
                 $aiData = [
-                    'estimated_time' => $response['estimated_time'] ?? 0,
-                    'Calories' => $response['Calories'] ?? 0,
-                    'Fats' => $response['Fats'] ?? 0,
-                    'Carbs' => $response['Carbs'] ?? 0,
-                    'Protein' => $response['Protein'] ?? 0,
+                    'estimated_time' => $response->json('estimated_time') ?? 0,
+                    'Calories' => $response->json('Calories') ?? 0,
+                    'Fats' => $response->json('Fats') ?? 0,
+                    'Carbs' => $response->json('Carbs') ?? 0,
+                    'Protein' => $response->json('Protein') ?? 0,
                 ];
             } else {
-                Log::warning('AI Service returned an error, using default values.');
+                Log::warning('AI Service returned an error.', [
+                    'status' => $response->status(),
+                    'body' => $response->body(),
+                ]);
             }
         } catch (\Exception $e) {
             Log::error('AI Service connection failed: ' . $e->getMessage());
@@ -200,11 +203,11 @@ class ReceiptController extends Controller
             'caption' => $receiptData['caption'] ?? null,
             'category' => $receiptData['category'],
             'image_url' => $imageUrl,
-            'estimated_time' => $aiData['estimated_time'] ?? 0,
-            'Calories' => $aiData['Calories'] ?? 0,
-            'Fats' => $aiData['Fats'] ?? 0,
-            'Carbs' => $aiData['Carbs'] ?? 0,
-            'Protein' => $aiData['Protein'] ?? 0,
+            'estimated_time' => $aiData['estimated_time'],
+            'Calories' => $aiData['Calories'],
+            'Fats' => $aiData['Fats'],
+            'Carbs' => $aiData['Carbs'],
+            'Protein' => $aiData['Protein'],
             'timestamp' => now(),
             'user_id' => auth()->id(),
         ]);
@@ -217,16 +220,15 @@ class ReceiptController extends Controller
             ];
         }, $instructionsData, array_keys($instructionsData)));
 
-        // Storing the ingredients object to return it
         $ingredients = collect($ingredientsData)->map(function ($ingredient) use ($receipt) {
-        return Ingredient::create([
-            'name' => $ingredient['name'],
-            'quantity' => $ingredient['quantity'],
-            'unit' => $ingredient['unit'],
-            'isAssigned' => true,
-            'receipt_id' => $receipt->receipt_id,
-        ]);
-    });
+            return Ingredient::create([
+                'name' => $ingredient['name'],
+                'quantity' => $ingredient['quantity'],
+                'unit' => $ingredient['unit'],
+                'isAssigned' => true,
+                'receipt_id' => $receipt->receipt_id,
+            ]);
+        });
 
         return response()->json([
             'message' => 'Post created successfully',
