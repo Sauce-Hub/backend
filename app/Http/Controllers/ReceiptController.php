@@ -161,6 +161,7 @@ class ReceiptController extends Controller
         $instructionsConcatenated = implode("\n", $instructionsData);
         $imageUrl = $request->file('receipt.image')->store('receipts', 'public');
 
+        
         $aiData = [
             'estimated_time' => 0,
             'Calories' => 0,
@@ -170,23 +171,22 @@ class ReceiptController extends Controller
         ];
 
         try {
-            $response = Http::withHeaders([
-                'X-API-Key' => config('services.ai.api_key'),
-            ])->post(
-                config('services.ai.url') . '/calculate-nutrition/',
+            $response = Http::post(
+                config('services.ai.url') . '/calculate-nutrition',
                 [
                     'ingredients' => $ingredientsData,
                     'instructions' => $instructionsConcatenated,
                 ]
             );
 
-            if ($response->successful()) {
+            if ($response->status() === 200) {
+                $data = $response->json();
                 $aiData = [
-                    'estimated_time' => $response->json('estimated_time') ?? 0,
-                    'Calories' => $response->json('Calories') ?? 0,
-                    'Fats' => $response->json('Fats') ?? 0,
-                    'Carbs' => $response->json('Carbs') ?? 0,
-                    'Protein' => $response->json('Protein') ?? 0,
+                    'estimated_time' => $data['estimated_time'] ?? 0,
+                    'Calories' => $data['Calories'] ?? 0,
+                    'Fats' => $data['Fats'] ?? 0,
+                    'Carbs' => $data['Carbs'] ?? 0,
+                    'Protein' => $data['Protein'] ?? 0,
                 ];
             } else {
                 Log::warning('AI Service returned an error.', [
