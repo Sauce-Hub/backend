@@ -28,12 +28,12 @@ class CreateReceiptRequest extends FormRequest
             'receipt.caption' => 'nullable|string|max:255',
             'receipt.category' => 'required|in:BREAKFAST,LUNCH,DINNER,SWEETS,HOT DRINKS,ICED DRINKS',
             'receipt.image' => 'required|image|max:5120',
-            'ingredients' => 'required|array',
-            'ingredients.*.name' => 'required|string|max:255',
-            'ingredients.*.quantity' => 'required|numeric|min:0',
-            'ingredients.*.unit' => 'required|in:g,kg,ml,l,tsp,tbsp,cup,piece',
-            'instructions' => 'required|array',
-            'instructions.*' => 'required|string|max:1000',
+            'receipt.ingredients' => 'required|array',
+            'receipt.ingredients.*.name' => 'required|string|max:255',
+            'receipt.ingredients.*.quantity' => 'required|numeric|min:0',
+            'receipt.ingredients.*.unit' => 'required|in:g,kg,ml,l,tsp,tbsp,cup,piece',
+            'receipt.instructions' => 'required|array',
+            'receipt.instructions.*' => 'required|string|max:1000'
         ];
     }
 }
